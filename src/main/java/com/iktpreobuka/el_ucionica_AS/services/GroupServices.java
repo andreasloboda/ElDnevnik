@@ -2,13 +2,13 @@ package com.iktpreobuka.el_ucionica_AS.services;
 
 import org.springframework.http.ResponseEntity;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.GroupDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeGroupDTO;
 
 public interface GroupServices {
 
 	ResponseEntity<?> getGroupById(Integer id);
 
-	ResponseEntity<?> makeOrAlterGroup(GroupDTO newGroup, Integer groupId);
+	ResponseEntity<?> makeOrAlterGroup(ChangeGroupDTO newGroup, Integer groupId);
 
 	ResponseEntity<?> advanceGroup(Integer id);
 

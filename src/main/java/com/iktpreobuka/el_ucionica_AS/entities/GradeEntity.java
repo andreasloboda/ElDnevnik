@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 
 
 @Entity
@@ -21,6 +22,8 @@ public class GradeEntity {
 	private Integer year;
 	// TODO false = first, true = second
 	private Boolean semester;
+	@Version
+	private Integer version;
 	
 	@ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 	@JoinColumn(name = "info")

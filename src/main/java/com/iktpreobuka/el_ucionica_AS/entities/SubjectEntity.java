@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -24,20 +25,26 @@ public class SubjectEntity {
 	private Integer hours;
 	private Integer year;
 	
+	@Version
+	private Integer version;
+	
 	@OneToMany (cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "subject")
 	@JsonIgnore
 	private List<TeachSubjEntity> teachers;
 
 	public SubjectEntity() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public SubjectEntity(Integer id, String name, Integer hours, Integer year, List<TeachSubjEntity> teachers) {
+	public SubjectEntity(Integer id, String name, Integer hours, Integer year, Integer version,
+			List<TeachSubjEntity> teachers) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.hours = hours;
 		this.year = year;
+		this.version = version;
 		this.teachers = teachers;
 	}
 
@@ -73,6 +80,14 @@ public class SubjectEntity {
 		this.year = year;
 	}
 
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
 	public List<TeachSubjEntity> getTeachers() {
 		return teachers;
 	}
@@ -80,5 +95,6 @@ public class SubjectEntity {
 	public void setTeachers(List<TeachSubjEntity> teachers) {
 		this.teachers = teachers;
 	}
-	
+
+		
 }

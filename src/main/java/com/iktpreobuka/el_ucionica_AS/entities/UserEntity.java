@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Version;
 
 import com.iktpreobuka.el_ucionica_AS.entities.enums.UserRole;
 
@@ -19,6 +20,8 @@ public class UserEntity {
 	private String username;
 	private String password;
 	private UserRole role;
+	@Version
+	private Integer version;
 	
 	public UserEntity() {
 		super();

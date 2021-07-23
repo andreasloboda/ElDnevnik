@@ -28,22 +28,22 @@ public class UserController {
 	@Autowired
 	private UserServices userServ;
 	
-	@GetMapping("/users/all")
+	@GetMapping("/users/search")
 	public ResponseEntity<?> getAll() {
 		return new ResponseEntity<> (userRepo.findAll(), HttpStatus.OK);
 	}
 
-	@GetMapping("/users/role/{role}")
+	@GetMapping("/users/search/role/{role}")
 	public ResponseEntity<?> getAllByRole(@PathVariable String role) {
 		return userServ.getByRole(role);
 	}
 	
-	@GetMapping("/users/id/{id}")
+	@GetMapping("/users/search/id/{id}")
 	public ResponseEntity<?> getById(@PathVariable Integer id) {
 		return userServ.getByID(id);
 	}
 	
-	@PostMapping("/users/new/admin")
+	@PostMapping("/users/new/admin/")
 	public ResponseEntity<?> makeNewAdmin(@RequestBody NewAdminDTO newAdmin) {
 		return userServ.makeNewAdmin(newAdmin);
 	}
@@ -53,7 +53,7 @@ public class UserController {
 		return userServ.makeNewTeachStud(newTeacher, UserRole.UserRole_TEACHER);
 	}
 	
-	@PostMapping("/users/new/student")
+	@PostMapping("/users/new/student/")
 	public ResponseEntity<?> makeNewStudent(@RequestBody NewTeachStudDTO newStud) {
 		return userServ.makeNewTeachStud(newStud, UserRole.UserRole_STUDENT);
 	}
@@ -82,4 +82,5 @@ public class UserController {
 	public ResponseEntity<?> addParentToStudent(@PathVariable Integer studId, @PathVariable Integer parId) {
 		return userServ.addParent(studId, parId);
 	}
+	
 }

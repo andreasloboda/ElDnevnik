@@ -1,13 +1,13 @@
 package com.iktpreobuka.el_ucionica_AS.controllers.DTOs;
 
-public class GroupDTO {
+public class ChangeGroupDTO {
 
 	private Integer year;
 	private Integer studgroup;
-	public GroupDTO() {
+	public ChangeGroupDTO() {
 		super();
 	}
-	public GroupDTO(Integer year, Integer studgroup) {
+	public ChangeGroupDTO(Integer year, Integer studgroup) {
 		super();
 		this.year = year;
 		this.studgroup = studgroup;

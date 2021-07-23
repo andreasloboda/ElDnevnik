@@ -10,4 +10,6 @@ public interface SutestRepository extends CrudRepository<SutestEntity, Integer> 
 
 	Optional<SutestEntity> findByStudIdAndTsTeacherIdAndTsSubjectId(Integer studentID, Integer teacherID, Integer subjectID);
 
+	boolean existsByTsIdAndStudId(Integer id, Integer id2);
+
 }

@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.GroupDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeGroupDTO;
 import com.iktpreobuka.el_ucionica_AS.entities.StudentEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.StudgroupEntity;
 import com.iktpreobuka.el_ucionica_AS.repositories.StudentRepository;
@@ -27,7 +27,7 @@ public class GroupServicesImp implements GroupServices{
 	}
 
 	@Override
-	public ResponseEntity<?> makeOrAlterGroup(GroupDTO newGroup, Integer groupId) {
+	public ResponseEntity<?> makeOrAlterGroup(ChangeGroupDTO newGroup, Integer groupId) {
 		StudgroupEntity group;
 		if (groupId == null) {
 			group = new StudgroupEntity();

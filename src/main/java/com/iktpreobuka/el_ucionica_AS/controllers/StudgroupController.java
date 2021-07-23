@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.GroupDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeGroupDTO;
 import com.iktpreobuka.el_ucionica_AS.repositories.StudgroupRepository;
 import com.iktpreobuka.el_ucionica_AS.services.GroupServices;
 
@@ -38,13 +38,14 @@ public class StudgroupController {
 		return groupServ.getGroupById(id);
 	}
 	
+	//TODO separate methods for altering and making new - for validation!
 	@PostMapping("/groups")
-	public ResponseEntity<?> makeNewGroup(@RequestBody GroupDTO newGroup){
+	public ResponseEntity<?> makeNewGroup(@RequestBody ChangeGroupDTO newGroup){
 		return groupServ.makeOrAlterGroup(newGroup, null);
 	}
 
 	@PutMapping("/groups/id/{id}")
-	public ResponseEntity<?> alterGroup(@PathVariable Integer id, @RequestBody GroupDTO newGroup){
+	public ResponseEntity<?> alterGroup(@PathVariable Integer id, @RequestBody ChangeGroupDTO newGroup){
 		return groupServ.makeOrAlterGroup(newGroup, id);
 	}
 	
@@ -67,6 +68,4 @@ public class StudgroupController {
 	public ResponseEntity<?> assignStudentToGroup(@PathVariable Integer studId, @PathVariable Integer groupId) {
 		return groupServ.assignStudent(studId, groupId);
 	}
-	
-	//TODO assign new subject
 }

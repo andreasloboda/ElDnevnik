@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -22,6 +23,8 @@ public class TeachSubjEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+	@Version
+	private Integer version;
 	@ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "teacher")
 	private TeacherEntity teacher;
