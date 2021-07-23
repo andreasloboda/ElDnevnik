@@ -12,7 +12,6 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.iktpreobuka.el_ucionica_AS.entities.enums.Schoolyear;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -23,7 +22,7 @@ public class SubjectEntity {
 	private Integer id;
 	private String name;
 	private Integer hours;
-	private Schoolyear year;
+	private Integer year;
 	
 	@OneToMany (cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "subject")
 	@JsonIgnore
@@ -33,7 +32,7 @@ public class SubjectEntity {
 		super();
 	}
 
-	public SubjectEntity(Integer id, String name, Integer hours, Schoolyear year, List<TeachSubjEntity> teachers) {
+	public SubjectEntity(Integer id, String name, Integer hours, Integer year, List<TeachSubjEntity> teachers) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -66,11 +65,11 @@ public class SubjectEntity {
 		this.hours = hours;
 	}
 
-	public Schoolyear getYear() {
+	public Integer getYear() {
 		return year;
 	}
 
-	public void setYear(Schoolyear year) {
+	public void setYear(Integer year) {
 		this.year = year;
 	}
 

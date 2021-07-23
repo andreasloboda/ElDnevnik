@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.iktpreobuka.el_ucionica_AS.entities.enums.Schoolyear;
 
 @Entity
 public class GradeEntity {
@@ -19,7 +18,7 @@ public class GradeEntity {
 	private Integer id;
 	// TODO 1-5
 	private Integer grade;
-	private Schoolyear year;
+	private Integer year;
 	// TODO false = first, true = second
 	private Boolean semester;
 	
@@ -31,7 +30,7 @@ public class GradeEntity {
 		super();
 	}
 
-	public GradeEntity(Integer id, Integer grade, Schoolyear year, Boolean semester, SutestEntity info) {
+	public GradeEntity(Integer id, Integer grade, Integer year, Boolean semester, SutestEntity info) {
 		super();
 		this.id = id;
 		this.grade = grade;
@@ -56,11 +55,11 @@ public class GradeEntity {
 		this.grade = grade;
 	}
 
-	public Schoolyear getYear() {
+	public Integer getYear() {
 		return year;
 	}
 
-	public void setYear(Schoolyear year) {
+	public void setYear(Integer year) {
 		this.year = year;
 	}
 

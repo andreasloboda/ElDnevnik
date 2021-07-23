@@ -9,10 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.iktpreobuka.el_ucionica_AS.entities.enums.Schoolyear;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -21,8 +21,11 @@ public class StudgroupEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	private Schoolyear year;
+	private Integer year;
 	private Integer studgroup;
+	private boolean active;
+	@Version
+	private Integer version; 
 	
 	@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "studgroup")
 	@JsonIgnore
@@ -33,7 +36,7 @@ public class StudgroupEntity {
 		// TODO Auto-generated constructor stub
 	}
 
-	public StudgroupEntity(Integer id, Schoolyear year, Integer studgroup, List<StudentEntity> students) {
+	public StudgroupEntity(Integer id, Integer year, Integer studgroup, List<StudentEntity> students) {
 		super();
 		this.id = id;
 		this.year = year;
@@ -49,11 +52,11 @@ public class StudgroupEntity {
 		this.id = id;
 	}
 
-	public Schoolyear getYear() {
+	public Integer getYear() {
 		return year;
 	}
 
-	public void setYear(Schoolyear year) {
+	public void setYear(Integer year) {
 		this.year = year;
 	}
 
@@ -71,6 +74,22 @@ public class StudgroupEntity {
 
 	public void setStudents(List<StudentEntity> students) {
 		this.students = students;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
 	}
 
 }
