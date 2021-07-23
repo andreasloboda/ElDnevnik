@@ -63,6 +63,10 @@ public class StudgroupController {
 		return groupServ.deleteGroup(id);
 	}
 	
+	@PutMapping("/users/student/{studId}/group/{groupId}")
+	public ResponseEntity<?> assignStudentToGroup(@PathVariable Integer studId, @PathVariable Integer groupId) {
+		return groupServ.assignStudent(studId, groupId);
+	}
+	
 	//TODO assign new subject
-	//TODO addStudent
 }

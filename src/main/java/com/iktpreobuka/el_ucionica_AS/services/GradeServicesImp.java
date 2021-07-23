@@ -27,7 +27,7 @@ public class GradeServicesImp implements GradeServices{
 			if ((newGrade.getGrade()>0)&&(newGrade.getGrade()<6))
 				grade.setGrade(newGrade.getGrade());
 			else return 2;
-			grade.setYear(sts.getStud().getGroup().getYear());
+			grade.setYear(sts.getStud().getStudgroup().getYear());
 			LocalDate date = LocalDate.now();
 			if (date.getMonth().getValue()>=9)
 				grade.setSemester(false);

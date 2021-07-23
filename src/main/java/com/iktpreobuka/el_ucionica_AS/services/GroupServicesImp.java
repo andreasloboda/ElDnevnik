@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.GroupDTO;
+import com.iktpreobuka.el_ucionica_AS.entities.StudentEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.StudgroupEntity;
+import com.iktpreobuka.el_ucionica_AS.repositories.StudentRepository;
 import com.iktpreobuka.el_ucionica_AS.repositories.StudgroupRepository;
 
 @Service
@@ -14,6 +16,8 @@ public class GroupServicesImp implements GroupServices{
 
 	@Autowired
 	private StudgroupRepository groupRepo;
+	@Autowired
+	private StudentRepository studRepo;
 	
 	@Override
 	public ResponseEntity<?> getGroupById(Integer id) {
@@ -93,6 +97,23 @@ public class GroupServicesImp implements GroupServices{
 			return new ResponseEntity<> (group, HttpStatus.OK);
 		}
 		return new ResponseEntity<> ("Error: Group not found", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> assignStudent(Integer studId, Integer groupId) {
+		if (studRepo.existsById(studId)) {
+			if (groupRepo.existsById(groupId)) {
+				StudgroupEntity group = groupRepo.findById(groupId).get();
+				if (group.isActive()) {
+					StudentEntity student = studRepo.findById(studId).get();
+					student.setStudgroup(group);
+					return new ResponseEntity<> (studRepo.save(student), HttpStatus.OK);
+				}
+				return new ResponseEntity<> ("Error: Group is not active", HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<> ("Error: Group not found", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<> ("Error: Student not found", HttpStatus.BAD_REQUEST);
 	}
 
 }

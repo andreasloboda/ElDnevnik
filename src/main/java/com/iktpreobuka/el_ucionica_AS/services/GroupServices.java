@@ -16,4 +16,6 @@ public interface GroupServices {
 
 	ResponseEntity<?> deleteGroup(Integer id);
 
+	ResponseEntity<?> assignStudent(Integer studId, Integer groupId);
+
 }

@@ -70,12 +70,12 @@ public class StudentEntity extends UserEntity {
 		this.parent = parent;
 	}
 
-	public StudgroupEntity getGroup() {
+	public StudgroupEntity getStudgroup() {
 		return studgroup;
 	}
 
-	public void setGroup(StudgroupEntity group) {
-		this.studgroup = group;
+	public void setStudgroup(StudgroupEntity studgroup) {
+		this.studgroup = studgroup;
 	}
 
 	public List<SutestEntity> getSubjects() {
@@ -85,6 +85,6 @@ public class StudentEntity extends UserEntity {
 	public void setSubjects(List<SutestEntity> subjects) {
 		this.subjects = subjects;
 	}
-	
+
 	
 }
