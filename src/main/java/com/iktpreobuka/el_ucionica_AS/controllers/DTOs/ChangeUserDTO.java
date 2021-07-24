@@ -1,10 +1,20 @@
 package com.iktpreobuka.el_ucionica_AS.controllers.DTOs;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
+
 public class ChangeUserDTO {
 
+	@Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters long")
+	//TODO only letters and numbers
 	private String username;
+	@Size(min = 2, max = 15, message = "Name must be between 2 and 15 letters long")
+	//TODO Only letters
 	private String name;
+	@Size(min = 2, max = 15, message = "Surame must be between 2 and 15 letters long")
+	//TODO Only letters
 	private String surname;
+	@Email (message = "Value provided is not an email")
 	private String email;
 	public ChangeUserDTO() {
 		super();

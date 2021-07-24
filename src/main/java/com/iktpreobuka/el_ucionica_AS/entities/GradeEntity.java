@@ -17,11 +17,9 @@ public class GradeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	//  1-5
-	private Integer grade;
-	private Integer year;
-	// false = first, true = second
-	private Boolean semester;
+	private Integer grade;		// 1 to 5
+	private Integer year;		// 1 to 8
+	private Boolean semester; 	// false = first, true = second
 	@Version
 	private Integer version;
 	

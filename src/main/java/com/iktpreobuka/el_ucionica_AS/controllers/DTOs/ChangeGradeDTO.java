@@ -1,12 +1,17 @@
 package com.iktpreobuka.el_ucionica_AS.controllers.DTOs;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 public class ChangeGradeDTO {
 	private Integer studentID;
 	private Integer teacherID;
 	private Integer subjectID;
-	// 1-5
+	@Min(value = 1, message = "Grade must be between 1 and 5")
+	@Max(value = 5, message = "Grade must be between 1 and 5")
 	private Integer grade;
-	//1-2
+	@Min(value = 1, message = "Semester can have value 1 or 2")
+	@Max(value = 2, message = "Semester can have value 1 or 2")
 	private Integer semester;
 	
 	public ChangeGradeDTO() {

@@ -1,5 +1,7 @@
 package com.iktpreobuka.el_ucionica_AS.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,12 +47,12 @@ public class SubjectController {
 	}
 	
 	@PostMapping("/subjects")
-	public ResponseEntity<?> makeNewSubject(@RequestBody NewSubjectDTO newSub) {
+	public ResponseEntity<?> makeNewSubject(@Valid @RequestBody NewSubjectDTO newSub) {
 		return subServ.makeNewSubject(newSub);
 	}
 	
 	@PutMapping("/subjects/{id}")
-	public ResponseEntity<?> alterSubject(@PathVariable Integer id, @RequestBody ChangeSubjectDTO sub) {
+	public ResponseEntity<?> alterSubject(@PathVariable Integer id, @Valid @RequestBody ChangeSubjectDTO sub) {
 		return subServ.alterSubject(id, sub);
 	}
 	

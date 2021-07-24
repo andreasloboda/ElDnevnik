@@ -1,12 +1,22 @@
 package com.iktpreobuka.el_ucionica_AS.controllers.DTOs;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 public class NewGradeDTO {
 
+	@NotNull (message = "Student ID must be provided")
 	private Integer studentID;
+	@NotNull (message = "Teacher ID must be provided")
 	private Integer teacherID;
+	@NotNull (message = "Subject ID must be provided")
 	private Integer subjectID;
-	// 1-5
+	@NotNull (message = "Grade must be provided")
+	@Min(value = 1, message = "Grade must be between 1 and 5")
+	@Max(value = 5, message = "Grade must be between 1 and 5")
 	private Integer grade;
+	
 	public NewGradeDTO() {
 		super();
 	}

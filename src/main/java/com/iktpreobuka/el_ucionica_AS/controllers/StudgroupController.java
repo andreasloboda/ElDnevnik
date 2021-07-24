@@ -1,5 +1,7 @@
 package com.iktpreobuka.el_ucionica_AS.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,12 +42,12 @@ public class StudgroupController {
 	}
 	
 	@PostMapping("/groups")
-	public ResponseEntity<?> makeNewGroup(@RequestBody NewGroupDTO newGroup){
+	public ResponseEntity<?> makeNewGroup(@Valid @RequestBody NewGroupDTO newGroup){
 		return groupServ.makeNewGroup(newGroup);
 	}
 
 	@PutMapping("/groups/id/{id}")
-	public ResponseEntity<?> alterGroup(@PathVariable Integer id, @RequestBody ChangeGroupDTO changeGroup){
+	public ResponseEntity<?> alterGroup(@PathVariable Integer id, @Valid @RequestBody ChangeGroupDTO changeGroup){
 		return groupServ.alterGroup(changeGroup, id);
 	}
 	

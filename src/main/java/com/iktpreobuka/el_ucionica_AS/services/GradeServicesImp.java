@@ -60,12 +60,8 @@ public class GradeServicesImp implements GradeServices{
 		if (!gradeRepo.existsById(id))
 			return new ResponseEntity<> ("Grade does not exist", HttpStatus.NOT_FOUND);
 		GradeEntity grade = gradeRepo.findById(id).get();
-		if (cGrade.getGrade()!=null) {
-			if ((cGrade.getGrade()>0)&&(cGrade.getGrade()<5))
-				grade.setGrade(cGrade.getGrade());
-			else
-				return new ResponseEntity<> ("Grade must be between 1 and 5", HttpStatus.NOT_FOUND);
-		}
+		if (cGrade.getGrade()!=null)
+			grade.setGrade(cGrade.getGrade());
 		int temp = 0;
 		if (cGrade.getStudentID()!=null)
 			temp = temp+1;

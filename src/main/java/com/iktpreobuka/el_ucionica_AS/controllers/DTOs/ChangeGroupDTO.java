@@ -1,9 +1,15 @@
 package com.iktpreobuka.el_ucionica_AS.controllers.DTOs;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 public class ChangeGroupDTO {
 
+	@Min(value = 1, message = "Year must be a value between 1 and 8")
+	@Max(value = 8, message = "Year must be a value between 1 and 8")
 	private Integer year;
 	private Integer studgroup;
+	
 	public ChangeGroupDTO() {
 		super();
 	}

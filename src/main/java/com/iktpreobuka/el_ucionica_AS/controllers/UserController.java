@@ -1,5 +1,7 @@
 package com.iktpreobuka.el_ucionica_AS.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,22 +46,22 @@ public class UserController {
 	}
 	
 	@PostMapping("/users/new/admin/")
-	public ResponseEntity<?> makeNewAdmin(@RequestBody NewAdminDTO newAdmin) {
+	public ResponseEntity<?> makeNewAdmin(@Valid @RequestBody NewAdminDTO newAdmin) {
 		return userServ.makeNewAdmin(newAdmin);
 	}
 	
 	@PostMapping("/users/new/teacher")
-	public ResponseEntity<?> makeNewTeacher(@RequestBody NewTeachStudDTO newTeacher) {
+	public ResponseEntity<?> makeNewTeacher(@Valid @RequestBody NewTeachStudDTO newTeacher) {
 		return userServ.makeNewTeachStud(newTeacher, UserRole.UserRole_TEACHER);
 	}
 	
 	@PostMapping("/users/new/student/")
-	public ResponseEntity<?> makeNewStudent(@RequestBody NewTeachStudDTO newStud) {
+	public ResponseEntity<?> makeNewStudent(@Valid @RequestBody NewTeachStudDTO newStud) {
 		return userServ.makeNewTeachStud(newStud, UserRole.UserRole_STUDENT);
 	}
 	
 	@PostMapping("/users/new/parent")
-	public ResponseEntity<?> makeNewParent(@RequestBody NewParentDTO newParent) {
+	public ResponseEntity<?> makeNewParent(@Valid @RequestBody NewParentDTO newParent) {
 		return userServ.makeNewParent(newParent);
 	}
 	
@@ -69,12 +71,12 @@ public class UserController {
 	}
 	
 	@PutMapping("/users/change/{id}")
-	public ResponseEntity<?> changeInfo(@PathVariable Integer id, @RequestBody ChangeUserDTO newInfo) {
+	public ResponseEntity<?> changeInfo(@PathVariable Integer id, @Valid @RequestBody ChangeUserDTO newInfo) {
 		return userServ.changeUser(id, newInfo);
 	}
 	
 	@PutMapping("/users/change/{id}/password")
-	public ResponseEntity<?> changeInfo(@PathVariable Integer id, @RequestBody PasswordDTO password) {
+	public ResponseEntity<?> changeInfo(@PathVariable Integer id, @Valid @RequestBody PasswordDTO password) {
 		return userServ.changePassword(id, password);
 	}
 	

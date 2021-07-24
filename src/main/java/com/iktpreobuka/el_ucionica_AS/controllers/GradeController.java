@@ -1,5 +1,7 @@
 package com.iktpreobuka.el_ucionica_AS.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,12 +37,12 @@ public class GradeController {
 	}
 	
 	@PostMapping("/grades/")
-	public ResponseEntity<?> makeNew(@RequestBody NewGradeDTO newGrade) {
+	public ResponseEntity<?> makeNew(@Valid @RequestBody NewGradeDTO newGrade) {
 		return gradeServ.makeNewGrade(newGrade);
 	}
 	
 	@PutMapping("/grades/{id}")
-	public ResponseEntity<?> changeExisting(@PathVariable Integer id, @RequestBody ChangeGradeDTO cGrade) {
+	public ResponseEntity<?> changeExisting(@PathVariable Integer id, @Valid @RequestBody ChangeGradeDTO cGrade) {
 		return gradeServ.changeGrade(id, cGrade);
 	}
 	
