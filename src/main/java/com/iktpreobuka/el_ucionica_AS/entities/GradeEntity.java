@@ -17,10 +17,10 @@ public class GradeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	// TODO 1-5
+	//  1-5
 	private Integer grade;
 	private Integer year;
-	// TODO false = first, true = second
+	// false = first, true = second
 	private Boolean semester;
 	@Version
 	private Integer version;

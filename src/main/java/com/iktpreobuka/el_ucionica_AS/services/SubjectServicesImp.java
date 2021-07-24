@@ -1,5 +1,7 @@
 package com.iktpreobuka.el_ucionica_AS.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import com.iktpreobuka.el_ucionica_AS.entities.SubjectEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.SutestEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.TeachSubjEntity;
 import com.iktpreobuka.el_ucionica_AS.repositories.StudentRepository;
+import com.iktpreobuka.el_ucionica_AS.repositories.StudgroupRepository;
 import com.iktpreobuka.el_ucionica_AS.repositories.SubjectRepository;
 import com.iktpreobuka.el_ucionica_AS.repositories.SutestRepository;
 import com.iktpreobuka.el_ucionica_AS.repositories.TeachSubjRepository;
@@ -30,6 +33,8 @@ public class SubjectServicesImp implements SubjectServices{
 	private StudentRepository studRepo;
 	@Autowired
 	private SutestRepository stsRepo;
+	@Autowired
+	private StudgroupRepository groupRepo;
 	
 	@Override
 	public ResponseEntity<?> getSubByYear(Integer yearNo) {
@@ -149,5 +154,32 @@ public class SubjectServicesImp implements SubjectServices{
 		stse.setTs(tse);
 		stse.setStud(stud);
 		return new ResponseEntity<> (stsRepo.save(stse), HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> assingSubToGroup(Integer subId, Integer teachId, Integer groupId) {
+		if (!subRepo.existsById(subId))
+			return new ResponseEntity<> ("Error: Subject not found", HttpStatus.BAD_REQUEST);
+		if (!teachRepo.existsById(teachId)) 
+			return new ResponseEntity<> ("Error: Teacher not found", HttpStatus.BAD_REQUEST);
+		if (!groupRepo.existsById(groupId))
+			return new ResponseEntity<> ("Error: Student group not found", HttpStatus.BAD_REQUEST);
+		if (!tsRepo.existsByTeacherIdAndSubjectId(teachId, subId))
+			return new ResponseEntity<> ("Error: Teacher and Subject not connected", HttpStatus.BAD_REQUEST);
+
+		TeachSubjEntity tse = tsRepo.findByTeacherIdAndSubjectId(teachId, subId).get();
+		
+		if (tse.getSubject().getYear()!=groupRepo.findById(groupId).get().getYear())
+			return new ResponseEntity<> ("Error: Subject is not meant for the group's year", HttpStatus.BAD_REQUEST);
+		List<StudentEntity> students = studRepo.findAllByStudgroupId(groupId);
+		for (StudentEntity se : students) {
+			if (!stsRepo.existsByTsIdAndStudId(tse.getId(), se.getId())) {
+				SutestEntity stse = new SutestEntity();
+				stse.setTs(tse);
+				stse.setStud(se);
+				stsRepo.save(stse);
+			}		
+		}
+		return new ResponseEntity<> (students, HttpStatus.OK);
 	}
 }

@@ -34,7 +34,6 @@ public class SubjectEntity {
 
 	public SubjectEntity() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public SubjectEntity(Integer id, String name, Integer hours, Integer year, Integer version,

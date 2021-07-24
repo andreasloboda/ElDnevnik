@@ -1,16 +1,18 @@
 package com.iktpreobuka.el_ucionica_AS.controllers.DTOs;
 
-public class NewGradeDTO {
-
+public class ChangeGradeDTO {
 	private Integer studentID;
 	private Integer teacherID;
 	private Integer subjectID;
 	// 1-5
 	private Integer grade;
-	public NewGradeDTO() {
+	//1-2
+	private Integer semester;
+	
+	public ChangeGradeDTO() {
 		super();
 	}
-	public NewGradeDTO(Integer studentID, Integer teacherID, Integer subjectID, Integer grade) {
+	public ChangeGradeDTO(Integer studentID, Integer teacherID, Integer subjectID, Integer grade) {
 		super();
 		this.studentID = studentID;
 		this.teacherID = teacherID;
@@ -40,6 +42,12 @@ public class NewGradeDTO {
 	}
 	public void setGrade(Integer grade) {
 		this.grade = grade;
+	}
+	public Integer getSemester() {
+		return semester;
+	}
+	public void setSemester(Integer semester) {
+		this.semester = semester;
 	}
 	
 	

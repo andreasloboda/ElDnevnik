@@ -33,7 +33,6 @@ public class StudgroupEntity {
 
 	public StudgroupEntity() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public StudgroupEntity(Integer id, Integer year, Integer studgroup, List<StudentEntity> students) {

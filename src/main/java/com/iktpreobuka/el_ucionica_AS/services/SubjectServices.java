@@ -27,4 +27,6 @@ public interface SubjectServices {
 
 	ResponseEntity<?> assingSubToStudent(Integer subId, Integer teachId, Integer studId);
 
+	ResponseEntity<?> assingSubToGroup(Integer subId, Integer teachId, Integer groupId);
+
 }

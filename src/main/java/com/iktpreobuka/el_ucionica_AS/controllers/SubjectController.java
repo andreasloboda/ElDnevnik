@@ -74,9 +74,13 @@ public class SubjectController {
 		return subServ.findSubsForTeacher(teachId);
 	}
 	
-	@PostMapping("/subjects/{subId}/teacher{teachId}/student/{studId}")
+	@PostMapping("/subjects/{subId}/teacher/{teachId}/student/{studId}")
 	public ResponseEntity<?> assignToStudent(@PathVariable Integer subId, @PathVariable Integer teachId, @PathVariable Integer studId) {
 		return subServ.assingSubToStudent(subId, teachId, studId);
 	}
-	//TODO assign to student group
+	
+	@PostMapping("/subjects/{subId}/teacher/{teachId}/group/{groupId}")
+	public ResponseEntity<?> assignToGroup(@PathVariable Integer subId, @PathVariable Integer teachId, @PathVariable Integer groupId) {
+		return subServ.assingSubToGroup(subId, teachId, groupId);
+	}
 }

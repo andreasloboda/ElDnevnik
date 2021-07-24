@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeGroupDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewGroupDTO;
 import com.iktpreobuka.el_ucionica_AS.entities.StudentEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.StudgroupEntity;
 import com.iktpreobuka.el_ucionica_AS.repositories.StudentRepository;
@@ -26,36 +27,7 @@ public class GroupServicesImp implements GroupServices{
 		return new ResponseEntity<> ("Error: Student Group not found", HttpStatus.BAD_REQUEST);
 	}
 
-	@Override
-	public ResponseEntity<?> makeOrAlterGroup(ChangeGroupDTO newGroup, Integer groupId) {
-		StudgroupEntity group;
-		if (groupId == null) {
-			group = new StudgroupEntity();
-			group.setActive(true);
-		}
-		else {
-			group = groupRepo.findById(groupId).orElse(null);
-			if (group == null)
-				return new ResponseEntity<> ("Error: Group not found", HttpStatus.BAD_REQUEST);
-		}
-		if (newGroup.getYear() == null) {
-				if (group.getYear()==null)
-					group.setYear(1);
-		}
-		else {
-			if ((newGroup.getYear()>0)&&(newGroup.getYear()<9))
-				group.setYear(newGroup.getYear());
-			else
-				return new ResponseEntity<> ("Error: Year out of bounds!", HttpStatus.BAD_REQUEST);
-		}
-		if (newGroup.getStudgroup() == null) {
-			if (group.getStudgroup() == null)
-				return new ResponseEntity<> ("Error: The Student group needs to be numbered", HttpStatus.BAD_REQUEST);
-		}
-		else
-			group.setStudgroup(newGroup.getStudgroup());
-		return new ResponseEntity<> (groupRepo.save(group), HttpStatus.OK);
-	}
+	
 
 	@Override
 	public ResponseEntity<?> advanceGroup(Integer id) {
@@ -114,6 +86,31 @@ public class GroupServicesImp implements GroupServices{
 			return new ResponseEntity<> ("Error: Group not found", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<> ("Error: Student not found", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> makeNewGroup(NewGroupDTO newGroup) {
+		StudgroupEntity group = new StudgroupEntity();
+		group.setActive(true);
+		group.setYear(newGroup.getYear());
+		group.setStudgroup(newGroup.getStudgroup());
+		return new ResponseEntity<> (groupRepo.save(group), HttpStatus.OK);
+		}
+
+	@Override
+	public ResponseEntity<?> alterGroup(ChangeGroupDTO changeGroup, Integer id) {
+		if (groupRepo.existsById(id))
+			return new ResponseEntity<> ("Error: Group not found", HttpStatus.BAD_REQUEST);
+		StudgroupEntity group = groupRepo.findById(id).get();
+		if (changeGroup.getStudgroup()!=null)
+			group.setStudgroup(changeGroup.getStudgroup());
+		if (changeGroup.getYear()!=null) {
+			if ((changeGroup.getYear()>0)&&(changeGroup.getYear()<9))
+				group.setYear(changeGroup.getYear());
+			else
+				return new ResponseEntity<> ("Error: Year out of bounds!", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<> (groupRepo.save(group), HttpStatus.OK);
 	}
 
 }
