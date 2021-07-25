@@ -4,6 +4,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ public class StudgroupController {
 	@Autowired
 	private GroupServices groupServ;
 	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@GetMapping("/groups/")
 	public ResponseEntity<?> getAllGroups() {
 		return new ResponseEntity<> (groupRepo.findAll(), HttpStatus.OK);
@@ -48,6 +52,7 @@ public class StudgroupController {
 	@PostMapping("/groups")
 	public ResponseEntity<?> makeNewGroup(@Valid @RequestBody NewGroupDTO newGroup, BindingResult result){
 		if (result.hasErrors()) {
+			logger.info("Attempted to make a group, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
 		return groupServ.makeNewGroup(newGroup);
@@ -56,6 +61,7 @@ public class StudgroupController {
 	@PutMapping("/groups/id/{id}")
 	public ResponseEntity<?> alterGroup(@PathVariable Integer id, @Valid @RequestBody ChangeGroupDTO changeGroup, BindingResult result){
 		if (result.hasErrors()) {
+			logger.info("Attempted to alter a group, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
 		return groupServ.alterGroup(changeGroup, id);

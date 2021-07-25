@@ -2,6 +2,8 @@ package com.iktpreobuka.el_ucionica_AS.services;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,8 @@ public class SubjectServicesImp implements SubjectServices{
 	@Autowired
 	private StudgroupRepository groupRepo;
 	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Override
 	public ResponseEntity<?> getSubByYear(Integer yearNo) {
 		if ((yearNo>0)&&(yearNo<9))
@@ -63,6 +67,7 @@ public class SubjectServicesImp implements SubjectServices{
 		subject.setName(newSub.getName());
 		subject.setHours(newSub.getHours());
 		subject.setYear(newSub.getYear());
+		logger.info("Created new subject named " + subject.getName() + " with " + subject.getHours() + " hours a week, for year " + subject.getYear());
 		return new ResponseEntity<> (subRepo.save(subject), HttpStatus.OK);
 	}
 
@@ -76,8 +81,10 @@ public class SubjectServicesImp implements SubjectServices{
 				subject.setName(sub.getName());
 			if (sub.getYear()!=null)
 				subject.setYear(sub.getYear());
+			logger.warn("Altered subject with ID " + subject.getId() + ". Please, check details.");
 			return new ResponseEntity<> (subRepo.save(subject), HttpStatus.OK);
 		}
+		logger.info("Attempted to alter a non-existant subject.");
 		return new ResponseEntity<> ("Error: Subject not found", HttpStatus.BAD_REQUEST);
 	}
 
@@ -86,8 +93,10 @@ public class SubjectServicesImp implements SubjectServices{
 		if (subRepo.existsById(id)) {
 			SubjectEntity subject = subRepo.findById(id).get();
 			subRepo.deleteById(id);
+			logger.info("Deleted subject with ID " + subject.getId());
 			return new ResponseEntity<> (subject, HttpStatus.OK);
 		}
+		logger.info("Attempted to delete a non-existant subject.");
 		return new ResponseEntity<> ("Error: Subject not found", HttpStatus.BAD_REQUEST);
 	}
 
@@ -96,15 +105,19 @@ public class SubjectServicesImp implements SubjectServices{
 		if (subRepo.existsById(subId)) {
 			if (teachRepo.existsById(teachId)) {
 				if (tsRepo.existsByTeacherIdAndSubjectId(teachId, subId)) {
+					logger.info("Attempted to assign teacher to a subject they already teach.");
 					return new ResponseEntity<> ("Error: Teacher and Subject already connected", HttpStatus.BAD_REQUEST);
 				}
 				TeachSubjEntity tse = new TeachSubjEntity();
 				tse.setSubject(subRepo.findById(subId).get());
 				tse.setTeacher(teachRepo.findById(teachId).get());
+				logger.info("Teacher " + teachId + " is assigned to subject " + subId);
 				return new ResponseEntity<> (tsRepo.save(tse), HttpStatus.OK);
 			}
+			logger.info("Attempted to add a non-existant teacher to a subject.");
 			return new ResponseEntity<> ("Error: Teacher not found", HttpStatus.BAD_REQUEST);
 		}
+		logger.info("Attempted to add a teacher to a non-existant subject.");
 		return new ResponseEntity<> ("Error: Subject not found", HttpStatus.BAD_REQUEST);
 	}
 
@@ -132,54 +145,60 @@ public class SubjectServicesImp implements SubjectServices{
 
 	@Override
 	public ResponseEntity<?> assingSubToStudent(Integer subId, Integer teachId, Integer studId) {
-		
-		if (!subRepo.existsById(subId))
-			return new ResponseEntity<> ("Error: Subject not found", HttpStatus.BAD_REQUEST);
-		if (!teachRepo.existsById(teachId)) 
-			return new ResponseEntity<> ("Error: Teacher not found", HttpStatus.BAD_REQUEST);
-		if (!studRepo.existsById(studId))
+		if (!studRepo.existsById(studId)) {
+			logger.info("Attempted to add a subject to a non-existant student.");
 			return new ResponseEntity<> ("Error: Student not found", HttpStatus.BAD_REQUEST);
-		if (!tsRepo.existsByTeacherIdAndSubjectId(teachId, subId))
+		}
+		if (!tsRepo.existsByTeacherIdAndSubjectId(teachId, subId)) {
+			logger.info("Attempted to assign a non existand combination of subject and teacher to a student.");
 			return new ResponseEntity<> ("Error: Teacher and Subject not connected", HttpStatus.BAD_REQUEST);
-		
+		}		
 		TeachSubjEntity tse = tsRepo.findByTeacherIdAndSubjectId(teachId, subId).get();
 		StudentEntity stud = studRepo.findById(studId).get();
 		
-		if (stsRepo.existsByTsIdAndStudId(tse.getId(), stud.getId()))
+		if (stsRepo.existsByTsIdAndStudId(tse.getId(), stud.getId())) {
+			logger.info("Attempted to assign a student the subject they already listen to.");
 			return new ResponseEntity<> ("Error: Student already assigned to this subject", HttpStatus.BAD_REQUEST);
-		if (tse.getSubject().getYear()!=stud.getStudgroup().getYear())
+		}
+		if (tse.getSubject().getYear()!=stud.getStudgroup().getYear()) {
+			logger.info("Attempted to assign a student the subject not meant for their year.");
 			return new ResponseEntity<> ("Error: Subject is not meant for student's year", HttpStatus.BAD_REQUEST);
-		
+		}
 		SutestEntity stse = new SutestEntity();
 		stse.setTs(tse);
 		stse.setStud(stud);
+		logger.info("Student " + studId + " assigned to subject " + subId + " taught by teacher " + teachId);
 		return new ResponseEntity<> (stsRepo.save(stse), HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<?> assingSubToGroup(Integer subId, Integer teachId, Integer groupId) {
-		if (!subRepo.existsById(subId))
-			return new ResponseEntity<> ("Error: Subject not found", HttpStatus.BAD_REQUEST);
-		if (!teachRepo.existsById(teachId)) 
-			return new ResponseEntity<> ("Error: Teacher not found", HttpStatus.BAD_REQUEST);
-		if (!groupRepo.existsById(groupId))
+		if (!groupRepo.existsById(groupId)) {
+			logger.info("Attempted to add a subject to a non-existant group.");
 			return new ResponseEntity<> ("Error: Student group not found", HttpStatus.BAD_REQUEST);
-		if (!tsRepo.existsByTeacherIdAndSubjectId(teachId, subId))
+		}
+		if (!tsRepo.existsByTeacherIdAndSubjectId(teachId, subId)) {
+			logger.info("Attempted to assign a non existand combination of subject and teacher to a group.");
 			return new ResponseEntity<> ("Error: Teacher and Subject not connected", HttpStatus.BAD_REQUEST);
-
+		}
 		TeachSubjEntity tse = tsRepo.findByTeacherIdAndSubjectId(teachId, subId).get();
 		
-		if (tse.getSubject().getYear()!=groupRepo.findById(groupId).get().getYear())
+		if (tse.getSubject().getYear()!=groupRepo.findById(groupId).get().getYear()) {
+			logger.info("Attempted to assign a group the subject not meant for their year.");
 			return new ResponseEntity<> ("Error: Subject is not meant for the group's year", HttpStatus.BAD_REQUEST);
+		}
 		List<StudentEntity> students = studRepo.findAllByStudgroupId(groupId);
+		int i = 0;
 		for (StudentEntity se : students) {
 			if (!stsRepo.existsByTsIdAndStudId(tse.getId(), se.getId())) {
 				SutestEntity stse = new SutestEntity();
 				stse.setTs(tse);
 				stse.setStud(se);
 				stsRepo.save(stse);
+				i++;
 			}		
 		}
+		logger.info("Assign subject " + subId + " taught by " + teachId + " to " + i + " students in group " + groupId);
 		return new ResponseEntity<> (students, HttpStatus.OK);
 	}
 }

@@ -4,6 +4,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +40,9 @@ public class UserController {
 	private UserServices userServ;
 	@Autowired
 	private UsersValidator passValidate;
-//	@Autowired
-//	private NewUserValidator userValidate;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	
 	@InitBinder
 	protected void initBinder(final WebDataBinder binder) {
@@ -64,6 +67,7 @@ public class UserController {
 	@PostMapping("/users/new/admin/")
 	public ResponseEntity<?> makeNewAdmin(@Valid @RequestBody NewAdminDTO newAdmin, BindingResult result) {
 		if (result.hasErrors()) {
+			logger.info("Attempted to make an Admin account, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
 		return userServ.makeNewAdmin(newAdmin);
@@ -72,6 +76,7 @@ public class UserController {
 	@PostMapping("/users/new/teacher")
 	public ResponseEntity<?> makeNewTeacher(@Valid @RequestBody NewTeachStudDTO newTeacher, BindingResult result) {
 		if (result.hasErrors()) {
+			logger.info("Attempted to make a Teacher account, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
 		return userServ.makeNewTeachStud(newTeacher, UserRole.UserRole_TEACHER);
@@ -80,6 +85,7 @@ public class UserController {
 	@PostMapping("/users/new/student/")
 	public ResponseEntity<?> makeNewStudent(@Valid @RequestBody NewTeachStudDTO newStud, BindingResult result) {
 		if (result.hasErrors()) {
+			logger.info("Attempted to make a Student account, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
 		return userServ.makeNewTeachStud(newStud, UserRole.UserRole_STUDENT);
@@ -88,6 +94,7 @@ public class UserController {
 	@PostMapping("/users/new/parent")
 	public ResponseEntity<?> makeNewParent(@Valid @RequestBody NewParentDTO newParent, BindingResult result) {
 		if (result.hasErrors()) {
+			logger.info("Attempted to make a Parent account, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
 		return userServ.makeNewParent(newParent);
@@ -101,6 +108,7 @@ public class UserController {
 	@PutMapping("/users/change/{id}")
 	public ResponseEntity<?> changeInfo(@PathVariable Integer id, @Valid @RequestBody ChangeUserDTO newInfo, BindingResult result) {
 		if (result.hasErrors()) {
+			logger.info("Attempted to alter an account, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
 		return userServ.changeUser(id, newInfo);
@@ -109,6 +117,7 @@ public class UserController {
 	@PutMapping("/users/change/{id}/password")
 	public ResponseEntity<?> changeInfo(@PathVariable Integer id, @Valid @RequestBody PasswordDTO password, BindingResult result) {
 		if (result.hasErrors()) {
+			logger.info("Attempted to change a password, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
 		return userServ.changePassword(id, password);

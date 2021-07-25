@@ -4,6 +4,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ public class SubjectController {
 	@Autowired
 	private SubjectServices subServ;
 	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@GetMapping("/subjects")
 	public ResponseEntity<?> getAllSubjects() {
 		return new ResponseEntity<> (subRepo.findAll(), HttpStatus.OK);
@@ -53,6 +57,7 @@ public class SubjectController {
 	@PostMapping("/subjects")
 	public ResponseEntity<?> makeNewSubject(@Valid @RequestBody NewSubjectDTO newSub, BindingResult result){
 		if (result.hasErrors()) {
+			logger.info("Attempted to make a subject, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
 		return subServ.makeNewSubject(newSub);
@@ -61,6 +66,7 @@ public class SubjectController {
 	@PutMapping("/subjects/{id}")
 	public ResponseEntity<?> alterSubject(@PathVariable Integer id, @Valid @RequestBody ChangeSubjectDTO sub, BindingResult result){
 		if (result.hasErrors()) {
+			logger.info("Attempted to alter a subject, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
 		return subServ.alterSubject(id, sub);

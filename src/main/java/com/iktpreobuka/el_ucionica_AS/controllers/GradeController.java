@@ -4,6 +4,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,8 @@ public class GradeController {
 	private GradeRepository gradeRepo;
 	@Autowired
 	private GradeServices gradeServ;
+
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@GetMapping ("/grades")
 	public ResponseEntity<?> getAll() {
@@ -43,6 +47,7 @@ public class GradeController {
 	@PostMapping("/grades/")
 	public ResponseEntity<?> makeNew(@Valid @RequestBody NewGradeDTO newGrade, BindingResult result){
 		if (result.hasErrors()) {
+			logger.info("Attempted to make a grade, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
 		return gradeServ.makeNewGrade(newGrade);
@@ -51,6 +56,7 @@ public class GradeController {
 	@PutMapping("/grades/{id}")
 	public ResponseEntity<?> changeExisting(@PathVariable Integer id, @Valid @RequestBody ChangeGradeDTO cGrade, BindingResult result){
 		if (result.hasErrors()) {
+			logger.info("Attempted to alter a grade, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
 		return gradeServ.changeGrade(id, cGrade);
