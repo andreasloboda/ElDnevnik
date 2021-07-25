@@ -68,64 +68,52 @@ public class UserServicesImp implements UserServices{
 
 	@Override
 	public ResponseEntity<?> makeNewAdmin(NewAdminDTO newAdmin) {
-		//TODO move password confirmation to validation level
-		if (newAdmin.getPassword().equals(newAdmin.getConfirmPassword())) {
-			if (userRepo.existsByUsername(newAdmin.getUsername()))
-				return new ResponseEntity<> ("Error: Username already taken", HttpStatus.BAD_REQUEST);
-			UserEntity user = new UserEntity();
-			user.setPassword(newAdmin.getPassword());
-			user.setRole(UserRole.UserRole_ADMIN);
-			user.setUsername(newAdmin.getUsername());
-			return new ResponseEntity<> (userRepo.save(user), HttpStatus.CREATED);
-		}
-		return new ResponseEntity<> ("Error: Passwords do not match!", HttpStatus.BAD_REQUEST);
+		if (userRepo.existsByUsername(newAdmin.getUsername()))
+			return new ResponseEntity<>("Error: Username already taken", HttpStatus.BAD_REQUEST);
+		UserEntity user = new UserEntity();
+		user.setPassword(newAdmin.getPassword());
+		user.setRole(UserRole.UserRole_ADMIN);
+		user.setUsername(newAdmin.getUsername());
+		return new ResponseEntity<>(userRepo.save(user), HttpStatus.CREATED);
 	}
 
 	@Override
 	public ResponseEntity<?> makeNewTeachStud(NewTeachStudDTO user, UserRole role) {
-		//TODO move password confirmation to validation level
-		if(user.getPassword().equals(user.getConfirmPassword())) {
-			if (userRepo.existsByUsername(user.getUsername()))
-				return new ResponseEntity<> ("Error: Username already taken", HttpStatus.BAD_REQUEST);
-			if (role == UserRole.UserRole_STUDENT) {
-				StudentEntity newUser = new StudentEntity();
-				newUser.setName(user.getName());
-				newUser.setPassword(user.getPassword());
-				newUser.setRole(UserRole.UserRole_STUDENT);
-				newUser.setSurname(user.getSurname());
-				newUser.setUsername(user.getUsername());
-				return new ResponseEntity<> (studRepo.save(newUser), HttpStatus.OK);
-			}
-			if (role == UserRole.UserRole_TEACHER) {
-				TeacherEntity newUser = new TeacherEntity();
-				newUser.setName(user.getName());
-				newUser.setPassword(user.getPassword());
-				newUser.setRole(UserRole.UserRole_TEACHER);
-				newUser.setSurname(user.getSurname());
-				newUser.setUsername(user.getUsername());
-				return new ResponseEntity<> (teacherRepo.save(newUser), HttpStatus.OK);
-			}
-			return new ResponseEntity<> ("Error: Wrong Role", HttpStatus.BAD_REQUEST);
+		if (userRepo.existsByUsername(user.getUsername()))
+			return new ResponseEntity<>("Error: Username already taken", HttpStatus.BAD_REQUEST);
+		if (role == UserRole.UserRole_STUDENT) {
+			StudentEntity newUser = new StudentEntity();
+			newUser.setName(user.getName());
+			newUser.setPassword(user.getPassword());
+			newUser.setRole(UserRole.UserRole_STUDENT);
+			newUser.setSurname(user.getSurname());
+			newUser.setUsername(user.getUsername());
+			return new ResponseEntity<>(studRepo.save(newUser), HttpStatus.OK);
 		}
-		return new ResponseEntity<> ("Error: Passwords do not match!", HttpStatus.BAD_REQUEST);
+		if (role == UserRole.UserRole_TEACHER) {
+			TeacherEntity newUser = new TeacherEntity();
+			newUser.setName(user.getName());
+			newUser.setPassword(user.getPassword());
+			newUser.setRole(UserRole.UserRole_TEACHER);
+			newUser.setSurname(user.getSurname());
+			newUser.setUsername(user.getUsername());
+			return new ResponseEntity<>(teacherRepo.save(newUser), HttpStatus.OK);
+		}
+		return new ResponseEntity<>("Error: Wrong Role", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
 	public ResponseEntity<?> makeNewParent(NewParentDTO user) {
-		//TODO move password confirmation to validation level
-		if(user.getPassword().equals(user.getConfirmPassword())) {
-			if (userRepo.existsByUsername(user.getUsername()))
-				return new ResponseEntity<> ("Error: Username already taken", HttpStatus.BAD_REQUEST);
-			ParentEntity newUser = new ParentEntity();
-			newUser.setName(user.getName());
-			newUser.setPassword(user.getPassword());
-			newUser.setRole(UserRole.UserRole_PARENT);
-			newUser.setSurname(user.getSurname());
-			newUser.setUsername(user.getUsername());
-			newUser.setEmail(user.getEmail());
-			return new ResponseEntity<> (parentRepo.save(newUser), HttpStatus.OK);
-		}
-		return new ResponseEntity<> ("Error: Passwords do not match!", HttpStatus.BAD_REQUEST);
+		if (userRepo.existsByUsername(user.getUsername()))
+			return new ResponseEntity<> ("Error: Username already taken", HttpStatus.BAD_REQUEST);
+		ParentEntity newUser = new ParentEntity();
+		newUser.setName(user.getName());
+		newUser.setPassword(user.getPassword());
+		newUser.setRole(UserRole.UserRole_PARENT);
+		newUser.setSurname(user.getSurname());
+		newUser.setUsername(user.getUsername());
+		newUser.setEmail(user.getEmail());
+		return new ResponseEntity<> (parentRepo.save(newUser), HttpStatus.OK);
 	}
 
 	@Override
@@ -227,9 +215,6 @@ public class UserServicesImp implements UserServices{
 
 	@Override
 	public ResponseEntity<?> changePassword(Integer id, PasswordDTO password) {
-		//TODO Passwords through validation
-		if (!password.getNewPass().equals(password.getConfirm()))
-			return new ResponseEntity<> ("Error: Passwords do not match", HttpStatus.BAD_REQUEST);
 		if(userRepo.existsById(id)) {
 			UserEntity user = userRepo.findById(id).get();
 			if (user.getPassword().equals(password.getOldPass())) {

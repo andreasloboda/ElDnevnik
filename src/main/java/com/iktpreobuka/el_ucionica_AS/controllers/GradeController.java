@@ -61,6 +61,7 @@ public class GradeController {
 		return gradeServ.getFromStudentForSubject(studId, subID);
 	}
 	
+	//TODO add another layer to this that sorts subjects by years and semesters and calculates the final GPA
 	@GetMapping("/users/student/{studId}/grades/final")
 	public ResponseEntity<?> getStudentsAverages(@PathVariable Integer studId) {
 		return gradeServ.getFinalGradesForStudent(studId);

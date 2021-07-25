@@ -85,4 +85,9 @@ public class SubjectController {
 	public ResponseEntity<?> assignToGroup(@PathVariable Integer subId, @PathVariable Integer teachId, @PathVariable Integer groupId) {
 		return subServ.assingSubToGroup(subId, teachId, groupId);
 	}
+	
+	//TODO See all subjects student studies
+	//TODO Delete teacher-subject combos
+	//TODO Delete STS combos
+	//TODO Edit STS and ST combos
 }

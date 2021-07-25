@@ -1,15 +1,16 @@
 package com.iktpreobuka.el_ucionica_AS.controllers.DTOs;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class NewAdminDTO {
 
 	@NotBlank (message = "Username must be provided")
 	@Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters long")
-	//TODO only letters and numbers
+	@Pattern(regexp = "^([a-zA-Z0-9]*)$", message = "Username can only contain letters and numbers")
 	private String username;
-	//TODO Special Validator
+	@Size(min = 3, max = 20, message = "Password must be between 3 and 20 characters long")
 	private String password;
 	private String confirmPassword;
 	

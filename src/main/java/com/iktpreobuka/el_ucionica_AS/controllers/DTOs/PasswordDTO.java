@@ -3,8 +3,6 @@ package com.iktpreobuka.el_ucionica_AS.controllers.DTOs;
 import javax.validation.constraints.NotBlank;
 
 public class PasswordDTO {
-
-	//TODO Special validator
 	
 	@NotBlank (message = "Old password must be provided")
 	private String oldPass;
