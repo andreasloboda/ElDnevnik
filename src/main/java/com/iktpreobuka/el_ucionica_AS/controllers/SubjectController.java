@@ -1,10 +1,14 @@
 package com.iktpreobuka.el_ucionica_AS.controllers;
 
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,12 +51,18 @@ public class SubjectController {
 	}
 	
 	@PostMapping("/subjects")
-	public ResponseEntity<?> makeNewSubject(@Valid @RequestBody NewSubjectDTO newSub) {
+	public ResponseEntity<?> makeNewSubject(@Valid @RequestBody NewSubjectDTO newSub, BindingResult result){
+		if (result.hasErrors()) {
+			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
+		}
 		return subServ.makeNewSubject(newSub);
 	}
 	
 	@PutMapping("/subjects/{id}")
-	public ResponseEntity<?> alterSubject(@PathVariable Integer id, @Valid @RequestBody ChangeSubjectDTO sub) {
+	public ResponseEntity<?> alterSubject(@PathVariable Integer id, @Valid @RequestBody ChangeSubjectDTO sub, BindingResult result){
+		if (result.hasErrors()) {
+			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
+		}
 		return subServ.alterSubject(id, sub);
 	}
 	
@@ -84,6 +94,13 @@ public class SubjectController {
 	@PostMapping("/subjects/{subId}/teacher/{teachId}/group/{groupId}")
 	public ResponseEntity<?> assignToGroup(@PathVariable Integer subId, @PathVariable Integer teachId, @PathVariable Integer groupId) {
 		return subServ.assingSubToGroup(subId, teachId, groupId);
+	}
+	
+	
+	
+	private String createErrorMessage(BindingResult result) {
+		return result.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining("\n"));
+
 	}
 	
 	//TODO See all subjects student studies

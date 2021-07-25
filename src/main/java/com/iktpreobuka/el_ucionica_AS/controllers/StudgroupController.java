@@ -1,10 +1,14 @@
 package com.iktpreobuka.el_ucionica_AS.controllers;
 
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,12 +46,18 @@ public class StudgroupController {
 	}
 	
 	@PostMapping("/groups")
-	public ResponseEntity<?> makeNewGroup(@Valid @RequestBody NewGroupDTO newGroup){
+	public ResponseEntity<?> makeNewGroup(@Valid @RequestBody NewGroupDTO newGroup, BindingResult result){
+		if (result.hasErrors()) {
+			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
+		}
 		return groupServ.makeNewGroup(newGroup);
 	}
 
 	@PutMapping("/groups/id/{id}")
-	public ResponseEntity<?> alterGroup(@PathVariable Integer id, @Valid @RequestBody ChangeGroupDTO changeGroup){
+	public ResponseEntity<?> alterGroup(@PathVariable Integer id, @Valid @RequestBody ChangeGroupDTO changeGroup, BindingResult result){
+		if (result.hasErrors()) {
+			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
+		}
 		return groupServ.alterGroup(changeGroup, id);
 	}
 	
@@ -69,5 +79,12 @@ public class StudgroupController {
 	@PutMapping("/users/student/{studId}/group/{groupId}")
 	public ResponseEntity<?> assignStudentToGroup(@PathVariable Integer studId, @PathVariable Integer groupId) {
 		return groupServ.assignStudent(studId, groupId);
+	}
+	
+	
+	
+	private String createErrorMessage(BindingResult result) {
+		return result.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining("\n"));
+
 	}
 }

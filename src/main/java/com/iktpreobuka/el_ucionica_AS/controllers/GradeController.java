@@ -1,10 +1,14 @@
 package com.iktpreobuka.el_ucionica_AS.controllers;
 
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,12 +41,18 @@ public class GradeController {
 	}
 	
 	@PostMapping("/grades/")
-	public ResponseEntity<?> makeNew(@Valid @RequestBody NewGradeDTO newGrade) {
+	public ResponseEntity<?> makeNew(@Valid @RequestBody NewGradeDTO newGrade, BindingResult result){
+		if (result.hasErrors()) {
+			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
+		}
 		return gradeServ.makeNewGrade(newGrade);
 	}
 	
 	@PutMapping("/grades/{id}")
-	public ResponseEntity<?> changeExisting(@PathVariable Integer id, @Valid @RequestBody ChangeGradeDTO cGrade) {
+	public ResponseEntity<?> changeExisting(@PathVariable Integer id, @Valid @RequestBody ChangeGradeDTO cGrade, BindingResult result){
+		if (result.hasErrors()) {
+			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
+		}
 		return gradeServ.changeGrade(id, cGrade);
 	}
 	
@@ -65,5 +75,12 @@ public class GradeController {
 	@GetMapping("/users/student/{studId}/grades/final")
 	public ResponseEntity<?> getStudentsAverages(@PathVariable Integer studId) {
 		return gradeServ.getFinalGradesForStudent(studId);
+	}
+	
+	
+	
+	private String createErrorMessage(BindingResult result) {
+		return result.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining("\n"));
+
 	}
 }
