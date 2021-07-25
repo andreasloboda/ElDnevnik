@@ -8,7 +8,6 @@ public class NewGroupDTO {
 
 	@Min(value = 1, message = "Year must be a value between 1 and 8")
 	@Max(value = 8, message = "Year must be a value between 1 and 8")
-	@NotNull (message = "Group's year must be provided")
 	private Integer year;
 	@NotNull (message = "Group's designation number must be provided")
 	private Integer studgroup;

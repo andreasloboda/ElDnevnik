@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,23 +32,30 @@ public class GradeServicesImp implements GradeServices{
 	private StudentRepository studRepo;
 	@Autowired
 	private EmailServices emailServ;
-	
+		
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Override
 	public ResponseEntity<?> makeNewGrade(NewGradeDTO newGrade) {
-		if (!stsRepo.existsByStudIdAndTsTeacherIdAndTsSubjectId(newGrade.getStudentID(), newGrade.getTeacherID(), newGrade.getSubjectID()))
+		if (!stsRepo.existsByStudIdAndTsTeacherIdAndTsSubjectId(newGrade.getStudentID(), newGrade.getTeacherID(), newGrade.getSubjectID())) {
+			logger.info("Attempt at making new grade failed; wrong combination of student, teacher and subject");
 			return new ResponseEntity<> ("Error: Student, Teacher and Subject are not connected", HttpStatus.BAD_REQUEST);
+		}
 		SutestEntity sts = stsRepo.findByStudIdAndTsTeacherIdAndTsSubjectId(newGrade.getStudentID(), newGrade.getTeacherID(), newGrade.getSubjectID()).get();
 		GradeEntity grade = new GradeEntity();
 		grade.setGrade(newGrade.getGrade());
 		grade.setInfo(sts);
 		if (sts.getTs().getSubject().getYear()==sts.getStud().getStudgroup().getYear())
 			grade.setYear(sts.getStud().getStudgroup().getYear());
-		else
+		else {
+			logger.info("Attempt at making new grade failed; Attempted to grade a student in subject they aren't listening to this year");
 			return new ResponseEntity<> ("Error: The subject is not taught at the year student is in!", HttpStatus.BAD_REQUEST);
+		}
 		if (LocalDate.now().getMonthValue()>=9)
 			grade.setSemester(false);
 		else
 			grade.setSemester(true);
+		logger.info("New grade made successfully. Student " + newGrade.getStudentID() + " got " + newGrade.getGrade() + " in Subject" + newGrade.getSubjectID() + " from teacher " + newGrade.getTeacherID() + ".");
 		emailServ.informParentAboutGrade(grade);
 		return new ResponseEntity<> (gradeRepo.save(grade), HttpStatus.OK);
 	}
@@ -60,18 +69,29 @@ public class GradeServicesImp implements GradeServices{
 
 	@Override
 	public ResponseEntity<?> changeGrade(Integer id, ChangeGradeDTO cGrade) {
-		if (!gradeRepo.existsById(id))
+		if (!gradeRepo.existsById(id)) {
+			logger.info("Attempt was made to change non-existing grade.");
 			return new ResponseEntity<> ("Grade does not exist", HttpStatus.NOT_FOUND);
+		}
 		GradeEntity grade = gradeRepo.findById(id).get();
-		if (cGrade.getGrade()!=null)
+		String log = "Grade " + grade.getId() + " is being altered: ";
+		if (cGrade.getGrade()!=null) {
 			grade.setGrade(cGrade.getGrade());
+			log = log + "grade changed to " + cGrade.getGrade() + ", ";
+		}
 		int temp = 0;
-		if (cGrade.getStudentID()!=null)
+		if (cGrade.getStudentID()!=null) {
 			temp = temp+1;
-		if (cGrade.getTeacherID()!=null)
+			log = log + "student changed to " + cGrade.getStudentID() + ", ";
+		}
+		if (cGrade.getTeacherID()!=null) {
 			temp = temp+2;
-		if (cGrade.getSubjectID()!=null)
+			log = log + ("teacher changed to " + cGrade.getTeacherID() + ", ");
+		}
+		if (cGrade.getSubjectID()!=null) {
 			temp = temp+4;
+			log = log + ("Subject changed to " + cGrade.getSubjectID() + ", ");
+		}
 		if (temp != 0) {
 			int suId = 0;
 			int teId = 0;
@@ -88,27 +108,35 @@ public class GradeServicesImp implements GradeServices{
 				suId = cGrade.getSubjectID();
 			else
 				suId = grade.getInfo().getTs().getSubject().getId();
-			if (!stsRepo.existsByStudIdAndTsTeacherIdAndTsSubjectId(stId, teId, suId))
+			if (!stsRepo.existsByStudIdAndTsTeacherIdAndTsSubjectId(stId, teId, suId)) {
+				logger.info("Attempt was made to change grade by ID " + id + ". Failed due to bad combination of subject, teacher and student.");
 				return new ResponseEntity<> ("Error: Student, Teacher and Subject are not connected", HttpStatus.BAD_REQUEST);
+			}
 			grade.setInfo(stsRepo.findByStudIdAndTsTeacherIdAndTsSubjectId(stId, teId, suId).get());
 		}
 		if (grade.getYear()!=grade.getInfo().getTs().getSubject().getYear())
 			grade.setYear(grade.getInfo().getTs().getSubject().getYear());
 		if (cGrade.getSemester()!=null) {
+			log = log + ("semester adjusted, ");
 			if (cGrade.getSemester()==1)
 				grade.setSemester(false);
 			if (cGrade.getSemester()==2)
 				grade.setSemester(true);
 		}
+		log = log + ("PLEASE CHECK FOR ACCURACY.");
+		logger.warn(log);
 		return new ResponseEntity<> (gradeRepo.save(grade), HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<?> deleteGrade(Integer id) {
-		if (!gradeRepo.existsById(id))
+		if (!gradeRepo.existsById(id)) {
+			logger.info("Attempt to delete grade that doesn't exist.");
 			return new ResponseEntity<> ("Grade does not exist", HttpStatus.NOT_FOUND);
+		}
 		GradeEntity grade = gradeRepo.findById(id).get();
 		gradeRepo.deleteById(id);
+		logger.info("Deleted a grade by ID " + grade.getId());
 		return new ResponseEntity<> (grade, HttpStatus.OK);
 	}
 
