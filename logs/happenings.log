@@ -1,0 +1,43 @@
+2021-07-25 17:46:02.329  INFO 10892 --- [main] c.i.e.ElUcionicaAsApplication            : Starting ElUcionicaAsApplication using Java 1.8.0_271 on PSHND-PC with PID 10892 (E:\ITprekval\04.Bekend\SpringToolSuite\el_ucionica_AS\target\classes started by PSHND in E:\ITprekval\04.Bekend\SpringToolSuite\el_ucionica_AS)
+2021-07-25 17:46:02.333  INFO 10892 --- [main] c.i.e.ElUcionicaAsApplication            : No active profile set, falling back to default profiles: default
+2021-07-25 17:46:03.326  INFO 10892 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-07-25 17:46:03.428  INFO 10892 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 85 ms. Found 9 JPA repository interfaces.
+2021-07-25 17:46:04.118  INFO 10892 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2021-07-25 17:46:04.131  INFO 10892 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-07-25 17:46:04.131  INFO 10892 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.48]
+2021-07-25 17:46:04.304  INFO 10892 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-07-25 17:46:04.304  INFO 10892 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1901 ms
+2021-07-25 17:46:04.873  INFO 10892 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-07-25 17:46:05.637  INFO 10892 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-07-25 17:46:07.158  INFO 10892 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-07-25 17:46:07.912  WARN 10892 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-07-25 17:46:08.067 DEBUG 10892 --- [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2021-07-25 17:46:08.176 DEBUG 10892 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 42 mappings in 'requestMappingHandlerMapping'
+2021-07-25 17:46:08.216 DEBUG 10892 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2021-07-25 17:46:08.229 DEBUG 10892 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2021-07-25 17:46:08.384  INFO 10892 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-07-25 17:46:08.393  INFO 10892 --- [main] c.i.e.ElUcionicaAsApplication            : Started ElUcionicaAsApplication in 6.737 seconds (JVM running for 7.65)
+2021-07-25 17:47:12.515  INFO 10892 --- [RMI TCP Connection(3)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2021-07-25 17:47:13.330  INFO 10892 --- [RMI TCP Connection(3)-127.0.0.1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-07-25 17:47:13.334  INFO 10892 --- [RMI TCP Connection(3)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2021-07-25 17:47:13.353  INFO 10892 --- [RMI TCP Connection(3)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2021-07-25 17:47:18.504  INFO 11696 --- [main] c.i.e.ElUcionicaAsApplication            : Starting ElUcionicaAsApplication using Java 1.8.0_271 on PSHND-PC with PID 11696 (E:\ITprekval\04.Bekend\SpringToolSuite\el_ucionica_AS\target\classes started by PSHND in E:\ITprekval\04.Bekend\SpringToolSuite\el_ucionica_AS)
+2021-07-25 17:47:18.519  INFO 11696 --- [main] c.i.e.ElUcionicaAsApplication            : No active profile set, falling back to default profiles: default
+2021-07-25 17:47:19.445  INFO 11696 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-07-25 17:47:19.545  INFO 11696 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 87 ms. Found 9 JPA repository interfaces.
+2021-07-25 17:47:20.239  INFO 11696 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (http)
+2021-07-25 17:47:20.252  INFO 11696 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2021-07-25 17:47:20.253  INFO 11696 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/9.0.48]
+2021-07-25 17:47:20.440  INFO 11696 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2021-07-25 17:47:20.440  INFO 11696 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1858 ms
+2021-07-25 17:47:21.007  INFO 11696 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2021-07-25 17:47:21.779  INFO 11696 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2021-07-25 17:47:23.263  INFO 11696 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-07-25 17:47:23.996  WARN 11696 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-07-25 17:47:24.448  INFO 11696 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (http) with context path ''
+2021-07-25 17:47:24.459  INFO 11696 --- [main] c.i.e.ElUcionicaAsApplication            : Started ElUcionicaAsApplication in 6.687 seconds (JVM running for 7.888)
+2021-07-25 17:47:36.629  INFO 11696 --- [http-nio-8080-exec-2] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-07-25 17:47:36.629  INFO 11696 --- [http-nio-8080-exec-2] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
+2021-07-25 17:47:36.630  INFO 11696 --- [http-nio-8080-exec-2] o.s.w.s.DispatcherServlet                : Completed initialization in 0 ms
+2021-07-25 17:47:38.806  INFO 11696 --- [http-nio-8080-exec-2] c.i.e.s.EmailServicesImp                 : Email about new grade sent to the parent of student with ID4.
+2021-07-25 17:48:23.665  WARN 11696 --- [http-nio-8080-exec-4] c.i.e.s.EmailServicesImp                 : Student with ID 26 has no parent registered. Email about new grade not sent.
