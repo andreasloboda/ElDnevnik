@@ -28,6 +28,8 @@ public class GradeServicesImp implements GradeServices{
 	private SutestRepository stsRepo;
 	@Autowired
 	private StudentRepository studRepo;
+	@Autowired
+	private EmailServices emailServ;
 	
 	@Override
 	public ResponseEntity<?> makeNewGrade(NewGradeDTO newGrade) {
@@ -45,6 +47,7 @@ public class GradeServicesImp implements GradeServices{
 			grade.setSemester(false);
 		else
 			grade.setSemester(true);
+		emailServ.informParentAboutGrade(grade);
 		return new ResponseEntity<> (gradeRepo.save(grade), HttpStatus.OK);
 	}
 
