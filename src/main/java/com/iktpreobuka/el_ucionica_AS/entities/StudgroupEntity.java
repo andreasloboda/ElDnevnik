@@ -25,6 +25,7 @@ public class StudgroupEntity {
 	private Integer studgroup;
 	private boolean active;
 	@Version
+	@JsonIgnore
 	private Integer version; 
 	
 	@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "studgroup")

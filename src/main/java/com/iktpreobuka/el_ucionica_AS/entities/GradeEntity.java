@@ -10,8 +10,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @Entity
+@JsonIgnoreProperties({ "handler", "hibernateLazyInitializer" })
 public class GradeEntity {
 
 	@Id
@@ -21,6 +25,7 @@ public class GradeEntity {
 	private Integer year;		// 1 to 8
 	private Boolean semester; 	// false = first, true = second
 	@Version
+	@JsonIgnore
 	private Integer version;
 	
 	@ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)

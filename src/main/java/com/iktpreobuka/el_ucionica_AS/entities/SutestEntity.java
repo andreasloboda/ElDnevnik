@@ -23,6 +23,7 @@ public class SutestEntity {
 	//subject - teacher - student
 
 	@Id
+	@JsonIgnore
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	@ManyToOne (cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
@@ -32,6 +33,7 @@ public class SutestEntity {
 	@JoinColumn(name = "ts")
 	private TeachSubjEntity ts;
 	@Version
+	@JsonIgnore
 	private Integer version;
 	
 	@OneToMany (cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "info")

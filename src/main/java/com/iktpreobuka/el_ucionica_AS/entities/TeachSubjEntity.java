@@ -21,9 +21,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class TeachSubjEntity {
 
 	@Id
+	@JsonIgnore
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	@Version
+	@JsonIgnore
 	private Integer version;
 	@ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "teacher")

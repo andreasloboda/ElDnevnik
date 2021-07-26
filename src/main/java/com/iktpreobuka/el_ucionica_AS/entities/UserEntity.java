@@ -25,6 +25,7 @@ public class UserEntity {
 	private String password;
 	private UserRole role;
 	@Version
+	@JsonIgnore
 	private Integer version;
 	
 	public UserEntity() {

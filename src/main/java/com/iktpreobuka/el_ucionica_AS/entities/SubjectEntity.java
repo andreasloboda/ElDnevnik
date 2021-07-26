@@ -26,6 +26,7 @@ public class SubjectEntity {
 	private Integer year;
 	
 	@Version
+	@JsonIgnore
 	private Integer version;
 	
 	@OneToMany (cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "subject")
