@@ -1,0 +1,16 @@
+2021-07-26 13:10:03.369  INFO 13068 --- [main] c.i.e.ElUcionicaAsApplication            : Starting ElUcionicaAsApplication using Java 1.8.0_271 on PSHND-PC with PID 13068 (E:\ITprekval\04.Bekend\SpringToolSuite\el_ucionica_AS\target\classes started by PSHND in E:\ITprekval\04.Bekend\SpringToolSuite\el_ucionica_AS)
+2021-07-26 13:10:03.383  INFO 13068 --- [main] c.i.e.ElUcionicaAsApplication            : No active profile set, falling back to default profiles: default
+2021-07-26 13:10:04.328  INFO 13068 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-07-26 13:10:04.427  INFO 13068 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 87 ms. Found 9 JPA repository interfaces.
+2021-07-26 13:10:05.108  INFO 13068 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (http)
+2021-07-26 13:10:05.121  INFO 13068 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2021-07-26 13:10:05.121  INFO 13068 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/9.0.48]
+2021-07-26 13:10:05.299  INFO 13068 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2021-07-26 13:10:05.300  INFO 13068 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1857 ms
+2021-07-26 13:10:05.879  INFO 13068 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2021-07-26 13:10:06.651  INFO 13068 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2021-07-26 13:10:08.453  INFO 13068 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-07-26 13:10:09.424  WARN 13068 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-07-26 13:10:10.024  INFO 13068 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (http) with context path ''
+2021-07-26 13:10:10.036  INFO 13068 --- [main] c.i.e.ElUcionicaAsApplication            : Started ElUcionicaAsApplication in 7.285 seconds (JVM running for 8.469)
+2021-07-26 13:10:44.840  INFO 13068 --- [http-nio-8080-exec-2] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'

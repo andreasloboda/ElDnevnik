@@ -29,6 +29,7 @@ import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.PasswordDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.util.UsersValidator;
 import com.iktpreobuka.el_ucionica_AS.entities.enums.UserRole;
 import com.iktpreobuka.el_ucionica_AS.repositories.UserRepository;
+import com.iktpreobuka.el_ucionica_AS.services.FileHandler;
 import com.iktpreobuka.el_ucionica_AS.services.UserServices;
 
 @RestController
@@ -40,6 +41,8 @@ public class UserController {
 	private UserServices userServ;
 	@Autowired
 	private UsersValidator passValidate;
+	@Autowired
+	private FileHandler fileHand;
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -128,7 +131,10 @@ public class UserController {
 		return userServ.addParent(studId, parId);
 	}
 	
-	
+	@GetMapping("/admin/download/log")
+	public ResponseEntity<?> downloadLog () {
+		return fileHand.downloadLog();
+	}
 	
 	private String createErrorMessage(BindingResult result) {
 		return result.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining("\n"));
