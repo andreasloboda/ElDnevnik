@@ -31,7 +31,7 @@ public class GradeServicesImp implements GradeServices{
 	@Autowired
 	private StudentRepository studRepo;
 	@Autowired
-	private EmailServices emailServ;
+	private OtherServices otherServ;
 		
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -56,7 +56,7 @@ public class GradeServicesImp implements GradeServices{
 		else
 			grade.setSemester(true);
 		logger.info("New grade made successfully. Student " + newGrade.getStudentID() + " got " + newGrade.getGrade() + " in Subject" + newGrade.getSubjectID() + " from teacher " + newGrade.getTeacherID() + ".");
-		emailServ.informParentAboutGrade(grade);
+		otherServ.informParentAboutGrade(grade);
 		return new ResponseEntity<> (gradeRepo.save(grade), HttpStatus.OK);
 	}
 

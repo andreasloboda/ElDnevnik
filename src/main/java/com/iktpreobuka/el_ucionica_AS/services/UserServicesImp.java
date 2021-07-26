@@ -12,6 +12,7 @@ import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewAdminDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewParentDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewTeachStudDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.PasswordDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.util.Encryption;
 import com.iktpreobuka.el_ucionica_AS.entities.ParentEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.StudentEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.TeacherEntity;
@@ -21,7 +22,6 @@ import com.iktpreobuka.el_ucionica_AS.repositories.ParentRepository;
 import com.iktpreobuka.el_ucionica_AS.repositories.StudentRepository;
 import com.iktpreobuka.el_ucionica_AS.repositories.TeacherRepository;
 import com.iktpreobuka.el_ucionica_AS.repositories.UserRepository;
-
 
 @Service
 public class UserServicesImp implements UserServices{
@@ -36,11 +36,11 @@ public class UserServicesImp implements UserServices{
 	private ParentRepository parentRepo;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+	
 	@Override
 	public ResponseEntity<?> getByRole(String role) {
 		if (role.equalsIgnoreCase("admin")) {
-			return new ResponseEntity<> (userRepo.findAllByRole(UserRole.UserRole_ADMIN), HttpStatus.OK);
+			return new ResponseEntity<> (userRepo.findAllByRole(UserRole.ROLE_ADMIN), HttpStatus.OK);
 		}
 		if (role.equalsIgnoreCase("teacher")) {
 			return new ResponseEntity<> (teacherRepo.findAll(), HttpStatus.OK);
@@ -58,13 +58,13 @@ public class UserServicesImp implements UserServices{
 	public ResponseEntity<?> getByID(Integer id) {
 		if (userRepo.existsById(id)) {
 			UserRole type = userRepo.findById(id).get().getRole();
-			if (type == UserRole.UserRole_ADMIN)
+			if (type == UserRole.ROLE_ADMIN)
 				return new ResponseEntity<> (userRepo.findById(id), HttpStatus.OK);
-			if (type == UserRole.UserRole_PARENT)
+			if (type == UserRole.ROLE_PARENT)
 				return new ResponseEntity<> (parentRepo.findById(id), HttpStatus.OK);
-			if (type == UserRole.UserRole_STUDENT)
+			if (type == UserRole.ROLE_STUDENT)
 				return new ResponseEntity<> (studRepo.findById(id), HttpStatus.OK);
-			if (type == UserRole.UserRole_TEACHER)
+			if (type == UserRole.ROLE_TEACHER)
 				return new ResponseEntity<> (teacherRepo.findById(id), HttpStatus.OK);
 		}
 		return new ResponseEntity<> ("Error: User does not exist", HttpStatus.BAD_REQUEST);
@@ -77,8 +77,8 @@ public class UserServicesImp implements UserServices{
 			return new ResponseEntity<>("Error: Username already taken", HttpStatus.BAD_REQUEST);
 		}
 		UserEntity user = new UserEntity();
-		user.setPassword(newAdmin.getPassword());
-		user.setRole(UserRole.UserRole_ADMIN);
+		user.setPassword(Encryption.getPassEncoded(newAdmin.getPassword()));
+		user.setRole(UserRole.ROLE_ADMIN);
 		user.setUsername(newAdmin.getUsername());
 		logger.info("New admin account created");
 		return new ResponseEntity<>(userRepo.save(user), HttpStatus.CREATED);
@@ -87,27 +87,27 @@ public class UserServicesImp implements UserServices{
 	@Override
 	public ResponseEntity<?> makeNewTeachStud(NewTeachStudDTO user, UserRole role) {
 		if (userRepo.existsByUsername(user.getUsername())) {
-			if (role == UserRole.UserRole_STUDENT)
+			if (role == UserRole.ROLE_STUDENT)
 				logger.info("Attempted to make new Student account, but username was taken");
-			if (role == UserRole.UserRole_TEACHER)
+			if (role == UserRole.ROLE_TEACHER)
 				logger.info("Attempted to make new Teacher account, but username was taken");
 			return new ResponseEntity<>("Error: Username already taken", HttpStatus.BAD_REQUEST);
 		}
-		if (role == UserRole.UserRole_STUDENT) {
+		if (role == UserRole.ROLE_STUDENT) {
 			StudentEntity newUser = new StudentEntity();
 			newUser.setName(user.getName());
-			newUser.setPassword(user.getPassword());
-			newUser.setRole(UserRole.UserRole_STUDENT);
+			newUser.setPassword(Encryption.getPassEncoded(user.getPassword()));
+			newUser.setRole(UserRole.ROLE_STUDENT);
 			newUser.setSurname(user.getSurname());
 			newUser.setUsername(user.getUsername());
 			logger.info("New student account created");
 			return new ResponseEntity<>(studRepo.save(newUser), HttpStatus.OK);
 		}
-		if (role == UserRole.UserRole_TEACHER) {
+		if (role == UserRole.ROLE_TEACHER) {
 			TeacherEntity newUser = new TeacherEntity();
 			newUser.setName(user.getName());
-			newUser.setPassword(user.getPassword());
-			newUser.setRole(UserRole.UserRole_TEACHER);
+			newUser.setPassword(Encryption.getPassEncoded(user.getPassword()));
+			newUser.setRole(UserRole.ROLE_TEACHER);
 			newUser.setSurname(user.getSurname());
 			newUser.setUsername(user.getUsername());
 			logger.info("New teacher account created");
@@ -124,8 +124,8 @@ public class UserServicesImp implements UserServices{
 		}
 		ParentEntity newUser = new ParentEntity();
 		newUser.setName(user.getName());
-		newUser.setPassword(user.getPassword());
-		newUser.setRole(UserRole.UserRole_PARENT);
+		newUser.setPassword(Encryption.getPassEncoded(user.getPassword()));
+		newUser.setRole(UserRole.ROLE_PARENT);
 		newUser.setSurname(user.getSurname());
 		newUser.setUsername(user.getUsername());
 		newUser.setEmail(user.getEmail());
@@ -137,25 +137,25 @@ public class UserServicesImp implements UserServices{
 	public ResponseEntity<?> deleteUser(Integer id) {
 		if (userRepo.existsById(id)) {
 			UserRole role = userRepo.findById(id).get().getRole();
-			if (role == UserRole.UserRole_ADMIN) {
+			if (role == UserRole.ROLE_ADMIN) {
 				UserEntity user = userRepo.findById(id).get();
 				userRepo.deleteById(id);
 				logger.info("Deleted Admin account with ID " + user.getId());
 				return new ResponseEntity<> (user, HttpStatus.OK);
 			}
-			if (role == UserRole.UserRole_TEACHER) {
+			if (role == UserRole.ROLE_TEACHER) {
 				TeacherEntity user = teacherRepo.findById(id).get();
 				teacherRepo.deleteById(id);
 				logger.info("Deleted Teacher account with ID " + user.getId());
 				return new ResponseEntity<> (user, HttpStatus.OK);
 			}
-			if (role == UserRole.UserRole_STUDENT) {
+			if (role == UserRole.ROLE_STUDENT) {
 				StudentEntity user = studRepo.findById(id).get();
 				studRepo.deleteById(id);
 				logger.info("Deleted Student account with ID " + user.getId());
 				return new ResponseEntity<> (user, HttpStatus.OK);
 			}
-			if (role == UserRole.UserRole_PARENT) {
+			if (role == UserRole.ROLE_PARENT) {
 				ParentEntity user = parentRepo.findById(id).get();
 				parentRepo.deleteById(id);
 				logger.info("Deleted Parent account with ID " + user.getId());
@@ -171,7 +171,7 @@ public class UserServicesImp implements UserServices{
 	public ResponseEntity<?> changeUser(Integer id, ChangeUserDTO newInfo) {
 		if(userRepo.existsById(id)) {
 			UserRole role = userRepo.findById(id).get().getRole();
-			if (role == UserRole.UserRole_ADMIN) {
+			if (role == UserRole.ROLE_ADMIN) {
 				UserEntity user = userRepo.findById(id).get();
 				if (newInfo.getUsername()!=null) {
 					if ((userRepo.existsByUsername(newInfo.getUsername()))&&(!newInfo.getUsername().equals(user.getUsername()))) {
@@ -184,7 +184,7 @@ public class UserServicesImp implements UserServices{
 				logger.warn("Altered an Admin account, please check the information");
 				return new ResponseEntity<> (userRepo.save(user), HttpStatus.OK);
 			}
-			if (role == UserRole.UserRole_TEACHER) {
+			if (role == UserRole.ROLE_TEACHER) {
 				TeacherEntity user = teacherRepo.findById(id).get();
 				if (newInfo.getUsername()!=null) {
 					if ((userRepo.existsByUsername(newInfo.getUsername()))&&(!newInfo.getUsername().equals(user.getUsername()))) {
@@ -201,7 +201,7 @@ public class UserServicesImp implements UserServices{
 				logger.warn("Altered a Teacher account, please check the information");
 				return new ResponseEntity<> (teacherRepo.save(user), HttpStatus.OK);
 			}
-			if (role == UserRole.UserRole_STUDENT) {
+			if (role == UserRole.ROLE_STUDENT) {
 				StudentEntity user = studRepo.findById(id).get();
 				if (newInfo.getUsername()!=null) {
 					if ((userRepo.existsByUsername(newInfo.getUsername()))&&(!newInfo.getUsername().equals(user.getUsername()))) {
@@ -218,7 +218,7 @@ public class UserServicesImp implements UserServices{
 				logger.warn("Altered a Student account, please check the information");
 				return new ResponseEntity<> (studRepo.save(user), HttpStatus.OK);
 			}
-			if (role == UserRole.UserRole_PARENT) {
+			if (role == UserRole.ROLE_PARENT) {
 				ParentEntity user = parentRepo.findById(id).get();
 				if (newInfo.getUsername()!=null) {
 					if ((userRepo.existsByUsername(newInfo.getUsername()))&&(!newInfo.getUsername().equals(user.getUsername()))) {
@@ -245,8 +245,8 @@ public class UserServicesImp implements UserServices{
 	public ResponseEntity<?> changePassword(Integer id, PasswordDTO password) {
 		if(userRepo.existsById(id)) {
 			UserEntity user = userRepo.findById(id).get();
-			if (user.getPassword().equals(password.getOldPass())) {
-				user.setPassword(password.getNewPass());
+			if (Encryption.validatePassword(password.getOldPass(), user.getPassword())) {
+				user.setPassword(Encryption.getPassEncoded(password.getNewPass()));
 				logger.info("User " + id + " changed their password");
 				return new ResponseEntity<> (userRepo.save(user), HttpStatus.OK);
 			}
