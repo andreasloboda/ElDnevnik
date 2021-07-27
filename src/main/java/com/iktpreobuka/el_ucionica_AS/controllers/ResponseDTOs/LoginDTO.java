@@ -1,4 +1,4 @@
-package com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs;
+package com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs;
 
 public class LoginDTO {
 

@@ -30,11 +30,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeUserDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.LoginDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewAdminDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewParentDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewTeachStudDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.PasswordDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.LoginDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.util.Encryption;
 import com.iktpreobuka.el_ucionica_AS.controllers.util.UsersValidator;
 import com.iktpreobuka.el_ucionica_AS.entities.UserEntity;

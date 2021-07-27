@@ -23,15 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeGradeDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewGradeDTO;
-import com.iktpreobuka.el_ucionica_AS.repositories.GradeRepository;
 import com.iktpreobuka.el_ucionica_AS.services.GradeServices;
 import com.iktpreobuka.el_ucionica_AS.services.OtherServices;
 
 @RestController
 public class GradeController {
 
-	@Autowired
-	private GradeRepository gradeRepo;
 	@Autowired
 	private GradeServices gradeServ;
 	@Autowired
@@ -42,7 +39,7 @@ public class GradeController {
 	@Secured("ROLE_ADMIN")
 	@GetMapping ("/grades")
 	public ResponseEntity<?> getAll() {
-		return new ResponseEntity<>(gradeRepo.findAll(), HttpStatus.OK);
+		return gradeServ.getAllGrades();
 	}
 	
 	@Secured({"ROLE_ADMIN", "ROLE_TEACHER", "ROLE_STUDENT", "ROLE_PARENT"})
@@ -108,7 +105,6 @@ public class GradeController {
 		return new ResponseEntity<> ("You have no authority to see this information", HttpStatus.UNAUTHORIZED);
 	}
 	
-	//TODO add another layer to this that sorts subjects by years and semesters and calculates the final GPA
 	@Secured({"ROLE_ADMIN", "ROLE_STUDENT", "ROLE_PARENT"})
 	@GetMapping("/users/student/{studId}/grades/final")
 	public ResponseEntity<?> getStudentsAverages(@PathVariable Integer studId, HttpServletRequest request) {

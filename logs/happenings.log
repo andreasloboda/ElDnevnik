@@ -965,3 +965,55 @@ io.jsonwebtoken.ExpiredJwtException: JWT expired at 2021-07-27T11:48:08Z. Curren
 2021-07-27 12:24:09.705  INFO 14988 --- [RMI TCP Connection(51)-127.0.0.1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2021-07-27 12:24:09.709  INFO 14988 --- [RMI TCP Connection(51)-127.0.0.1] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
 2021-07-27 12:24:09.718  INFO 14988 --- [RMI TCP Connection(51)-127.0.0.1] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2021-07-27 19:49:41.487  INFO 4652 --- [main] c.i.e.ElUcionicaAsApplication            : Starting ElUcionicaAsApplication using Java 1.8.0_271 on PSHND-PC with PID 4652 (E:\ITprekval\04.Bekend\SpringToolSuite\el_ucionica_AS\target\classes started by PSHND in E:\ITprekval\04.Bekend\SpringToolSuite\el_ucionica_AS)
+2021-07-27 19:49:41.888  INFO 4652 --- [main] c.i.e.ElUcionicaAsApplication            : No active profile set, falling back to default profiles: default
+2021-07-27 19:49:48.340  INFO 4652 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-07-27 19:49:48.525  INFO 4652 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 166 ms. Found 9 JPA repository interfaces.
+2021-07-27 19:49:49.572  INFO 4652 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@18102ee' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-07-27 19:49:49.583  INFO 4652 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-07-27 19:49:51.074  INFO 4652 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (http)
+2021-07-27 19:49:51.099  INFO 4652 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2021-07-27 19:49:51.100  INFO 4652 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/9.0.48]
+2021-07-27 19:49:51.348  INFO 4652 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2021-07-27 19:49:51.348  INFO 4652 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 9129 ms
+2021-07-27 19:49:53.794  INFO 4652 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2021-07-27 19:49:56.119  INFO 4652 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2021-07-27 19:50:00.875  INFO 4652 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-07-27 19:50:01.008  WARN 4652 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-07-27 19:50:02.649  INFO 4652 --- [main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 7ae2e0de-df16-4696-a2bb-d8175e732a5d
+
+2021-07-27 19:50:02.853  INFO 4652 --- [main] o.s.s.w.DefaultSecurityFilterChain       : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1e6b7e4, org.springframework.security.web.context.SecurityContextPersistenceFilter@2653a0, org.springframework.security.web.header.HeaderWriterFilter@11cbcda, org.springframework.security.web.authentication.logout.LogoutFilter@161365c, com.iktpreobuka.el_ucionica_AS.config.JWTAuthorizationFilter@c27b8b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@c646b3, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@41ed02, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1842275, org.springframework.security.web.session.SessionManagementFilter@6280de, org.springframework.security.web.access.ExceptionTranslationFilter@b3004e, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@17bfebd]
+2021-07-27 19:50:03.684  INFO 4652 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (http) with context path ''
+2021-07-27 19:50:03.696  INFO 4652 --- [main] c.i.e.ElUcionicaAsApplication            : Started ElUcionicaAsApplication in 28.982 seconds (JVM running for 35.566)
+2021-07-27 19:50:15.073  INFO 4652 --- [http-nio-8080-exec-3] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-07-27 19:50:15.947  INFO 4652 --- [http-nio-8080-exec-3] c.i.e.c.UserController                   : User 8 logged in.
+2021-07-27 20:21:24.240  INFO 4652 --- [http-nio-8080-exec-1] c.i.e.c.UserController                   : User 8 logged in.
+2021-07-27 20:21:58.250  INFO 4652 --- [RMI TCP Connection(36)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2021-07-27 20:21:58.383  INFO 4652 --- [RMI TCP Connection(36)-127.0.0.1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-07-27 20:21:58.387  INFO 4652 --- [RMI TCP Connection(36)-127.0.0.1] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2021-07-27 20:21:58.397  INFO 4652 --- [RMI TCP Connection(36)-127.0.0.1] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2021-07-27 20:22:03.858  INFO 124 --- [main] c.i.e.ElUcionicaAsApplication            : Starting ElUcionicaAsApplication using Java 1.8.0_271 on PSHND-PC with PID 124 (E:\ITprekval\04.Bekend\SpringToolSuite\el_ucionica_AS\target\classes started by PSHND in E:\ITprekval\04.Bekend\SpringToolSuite\el_ucionica_AS)
+2021-07-27 20:22:03.872  INFO 124 --- [main] c.i.e.ElUcionicaAsApplication            : No active profile set, falling back to default profiles: default
+2021-07-27 20:22:04.919  INFO 124 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-07-27 20:22:05.015  INFO 124 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 86 ms. Found 9 JPA repository interfaces.
+2021-07-27 20:22:05.453  INFO 124 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@e9b9a9' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-07-27 20:22:05.460  INFO 124 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-07-27 20:22:05.769  INFO 124 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (http)
+2021-07-27 20:22:05.781  INFO 124 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2021-07-27 20:22:05.782  INFO 124 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/9.0.48]
+2021-07-27 20:22:05.971  INFO 124 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2021-07-27 20:22:05.971  INFO 124 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2030 ms
+2021-07-27 20:22:06.546  INFO 124 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2021-07-27 20:22:07.400  INFO 124 --- [main] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2021-07-27 20:22:09.013  INFO 124 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-07-27 20:22:09.085  WARN 124 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-07-27 20:22:10.068  INFO 124 --- [main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 9fc67180-f489-4d59-b1ff-43c16b8a09c0
+
+2021-07-27 20:22:10.191  INFO 124 --- [main] o.s.s.w.DefaultSecurityFilterChain       : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1ad5acb, org.springframework.security.web.context.SecurityContextPersistenceFilter@1a7db2a, org.springframework.security.web.header.HeaderWriterFilter@e3f4ae, org.springframework.security.web.authentication.logout.LogoutFilter@79e983, com.iktpreobuka.el_ucionica_AS.config.JWTAuthorizationFilter@1c862af, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@e94de9, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@17a4bac, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1b9f7d4, org.springframework.security.web.session.SessionManagementFilter@17ff311, org.springframework.security.web.access.ExceptionTranslationFilter@9ea380, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6833a2]
+2021-07-27 20:22:10.811  INFO 124 --- [main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (http) with context path ''
+2021-07-27 20:22:10.823  INFO 124 --- [main] c.i.e.ElUcionicaAsApplication            : Started ElUcionicaAsApplication in 7.637 seconds (JVM running for 8.681)
+2021-07-27 20:22:11.365  INFO 124 --- [http-nio-8080-exec-2] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'

@@ -11,8 +11,7 @@ public class FinalGradeDTO {
 	@JsonIgnore
 	private Integer gradeSum;
 
-	private String studentName;
-	private String studentSurname;
+	
 	private String subjectName;
 	private Integer year;
 	private Integer average;
@@ -21,12 +20,11 @@ public class FinalGradeDTO {
 		super();
 	}
 
-	public FinalGradeDTO(Integer subjectId, String studentName, String studentSurname, String subjectName, Integer year,
+	public FinalGradeDTO(Integer subjectId, String subjectName, Integer year,
 			Integer average) {
 		super();
 		this.subjectId = subjectId;
-		this.studentName = studentName;
-		this.studentSurname = studentSurname;
+		
 		this.subjectName = subjectName;
 		this.year = year;
 		this.average = average;
@@ -38,22 +36,6 @@ public class FinalGradeDTO {
 
 	public void setSubjectId(Integer subjectId) {
 		this.subjectId = subjectId;
-	}
-
-	public String getStudentName() {
-		return studentName;
-	}
-
-	public void setStudentName(String studentName) {
-		this.studentName = studentName;
-	}
-
-	public String getStudentSurname() {
-		return studentSurname;
-	}
-
-	public void setStudentSurname(String studentSurname) {
-		this.studentSurname = studentSurname;
 	}
 
 	public String getSubjectName() {

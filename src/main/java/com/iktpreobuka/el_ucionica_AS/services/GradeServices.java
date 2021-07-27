@@ -21,4 +21,6 @@ public interface GradeServices {
 
 	ResponseEntity<?> getFinalGradesForStudent(Integer studId);
 
+	ResponseEntity<?> getAllGrades();
+
 }

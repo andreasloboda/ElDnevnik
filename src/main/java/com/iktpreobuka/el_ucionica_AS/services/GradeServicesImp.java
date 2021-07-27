@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeGradeDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewGradeDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.FinalGradeDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.GpaDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.GradeDTO;
 import com.iktpreobuka.el_ucionica_AS.entities.GradeEntity;
+import com.iktpreobuka.el_ucionica_AS.entities.StudentEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.SutestEntity;
 import com.iktpreobuka.el_ucionica_AS.repositories.GradeRepository;
 import com.iktpreobuka.el_ucionica_AS.repositories.StudentRepository;
@@ -57,13 +60,13 @@ public class GradeServicesImp implements GradeServices{
 			grade.setSemester(true);
 		logger.info("New grade made successfully. Student " + newGrade.getStudentID() + " got " + newGrade.getGrade() + " in Subject" + newGrade.getSubjectID() + " from teacher " + newGrade.getTeacherID() + ".");
 		otherServ.informParentAboutGrade(grade);
-		return new ResponseEntity<> (gradeRepo.save(grade), HttpStatus.OK);
+		return new ResponseEntity<> (gradeToDTO(gradeRepo.save(grade)), HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<?> findGrade(Integer id) {
 		if (gradeRepo.existsById(id))
-			return new ResponseEntity<> (gradeRepo.findById(id).get(), HttpStatus.OK);
+			return new ResponseEntity<> (gradeToDTO(gradeRepo.findById(id).get()), HttpStatus.OK);
 		return new ResponseEntity<> ("Grade does not exist", HttpStatus.NOT_FOUND);
 	}
 
@@ -125,7 +128,7 @@ public class GradeServicesImp implements GradeServices{
 		}
 		log = log + ("PLEASE CHECK FOR ACCURACY.");
 		logger.warn(log);
-		return new ResponseEntity<> (gradeRepo.save(grade), HttpStatus.OK);
+		return new ResponseEntity<> (gradeToDTO(gradeRepo.save(grade)), HttpStatus.OK);
 	}
 
 	@Override
@@ -137,14 +140,20 @@ public class GradeServicesImp implements GradeServices{
 		GradeEntity grade = gradeRepo.findById(id).get();
 		gradeRepo.deleteById(id);
 		logger.info("Deleted a grade by ID " + grade.getId());
-		return new ResponseEntity<> (grade, HttpStatus.OK);
+		return new ResponseEntity<> (gradeToDTO(grade), HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<?> getAllFromStudent(Integer studID) {
 		if (!studRepo.existsById(studID))
 			return new ResponseEntity<> ("Student does not exist", HttpStatus.NOT_FOUND);
-		return new ResponseEntity<> (gradeRepo.findAllByInfoStudId(studID), HttpStatus.OK);
+		List<GradeEntity> gradesList = (List<GradeEntity>) gradeRepo.findAllByInfoStudId(studID);
+		if (gradesList.isEmpty())
+			return new ResponseEntity<> ("Student has no grades", HttpStatus.NOT_FOUND);
+		List<GradeDTO> response = new ArrayList<GradeDTO>();
+		for (GradeEntity grade : gradesList)
+			response.add(gradeToDTO(grade));
+		return new ResponseEntity<> (response, HttpStatus.OK);
 	}
 
 	@Override
@@ -153,15 +162,24 @@ public class GradeServicesImp implements GradeServices{
 			return new ResponseEntity<> ("Student does not exist", HttpStatus.NOT_FOUND);
 		if (!stsRepo.existsByStudIdAndTsSubjectId(studId, subID))
 			return new ResponseEntity<> ("Student does not listen to this subject", HttpStatus.NOT_FOUND);
-		return new ResponseEntity<> (gradeRepo.findAllByInfoStudIdAndInfoTsSubjectId(studId, subID), HttpStatus.OK);
+		List<GradeEntity> gradesList = (List<GradeEntity>) gradeRepo.findAllByInfoStudIdAndInfoTsSubjectId(studId, subID);
+		if (gradesList.isEmpty())
+			return new ResponseEntity<> ("Student has no grades for this subject", HttpStatus.NOT_FOUND);
+		List<GradeDTO> response = new ArrayList<GradeDTO>();
+		for (GradeEntity grade : gradesList)
+			response.add(gradeToDTO(grade));
+		return new ResponseEntity<> (response, HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<?> getFinalGradesForStudent(Integer studId) {
 		if (!studRepo.existsById(studId))
 			return new ResponseEntity<> ("Student does not exist", HttpStatus.NOT_FOUND);
+		StudentEntity student = studRepo.findById(studId).get();
+		if (student.getStudgroup()==null)
+			return new ResponseEntity<> ("Student information missing", HttpStatus.NOT_FOUND);
 		List<FinalGradeDTO> subjectList = new ArrayList<FinalGradeDTO>();
-		List<GradeEntity> gradesList = gradeRepo.findAllByInfoStudId(studId);
+		List<GradeEntity> gradesList = gradeRepo.findAllByInfoStudId(student.getId());
 		if (gradesList.isEmpty())
 			return new ResponseEntity<> ("Student does not have grades", HttpStatus.NOT_FOUND);
 		for (GradeEntity grade : gradesList) {
@@ -169,7 +187,22 @@ public class GradeServicesImp implements GradeServices{
 				subjectList.add(addNewSubject(grade));
 			addGradeToSubject(grade, subjectList);
 		}
-		return new ResponseEntity<> (subjectList, HttpStatus.OK);
+		GpaDTO gpa = new GpaDTO();
+		gpa.setStudentName(student.getName());
+		gpa.setStudentSurname(student.getSurname());
+		gpa.setStudentYear(student.getStudgroup().getYear());
+		int[] gpaSum = new int[gpa.getStudentYear()];
+		int[] gpaNum = new int[gpa.getStudentYear()];
+		Float[] gpaAvg = new Float[gpa.getStudentYear()];
+		for (FinalGradeDTO subject : subjectList) {
+			gpaSum[subject.getYear()-1] = gpaSum[subject.getYear()-1] + subject.getAverage();
+			gpaNum[subject.getYear()-1] ++;
+		}
+		for (int i = 0; i<gpa.getStudentYear(); i++)
+			gpaAvg[i] = (float) gpaSum[i] / gpaNum[i];
+		gpa.setGpa(gpaAvg);
+		gpa.setFinalGrades(subjectList);
+		return new ResponseEntity<> (gpa, HttpStatus.OK);
 	}
 	
 	private void addGradeToSubject(GradeEntity grade, List<FinalGradeDTO> subjectList) {
@@ -191,8 +224,6 @@ public class GradeServicesImp implements GradeServices{
 
 	private FinalGradeDTO addNewSubject(GradeEntity grade) {
 		FinalGradeDTO subject = new FinalGradeDTO();
-		subject.setStudentName(grade.getInfo().getStud().getName());
-		subject.setStudentSurname(grade.getInfo().getStud().getSurname());
 		subject.setSubjectId(grade.getInfo().getTs().getSubject().getId());
 		subject.setSubjectName(grade.getInfo().getTs().getSubject().getName());
 		subject.setYear(grade.getInfo().getTs().getSubject().getYear());
@@ -200,5 +231,34 @@ public class GradeServicesImp implements GradeServices{
 		subject.setGradesNumber(0);
 		subject.setGradeSum(0);
 		return subject;
+	}
+
+	@Override
+	public ResponseEntity<?> getAllGrades() {
+		List<GradeEntity> gradesList = (List<GradeEntity>) gradeRepo.findAll();
+		if (gradesList.isEmpty())
+			return new ResponseEntity<> ("No grades in database", HttpStatus.NOT_FOUND);
+		List<GradeDTO> response = new ArrayList<GradeDTO>();
+		for (GradeEntity grade : gradesList)
+			response.add(gradeToDTO(grade));
+		return new ResponseEntity<> (response, HttpStatus.OK);
+	}
+	
+	private GradeDTO gradeToDTO(GradeEntity grade) {
+		GradeDTO dto = new GradeDTO();
+		dto.setGrade(grade.getGrade());
+		dto.setGradeId(grade.getId());
+		dto.setYear(grade.getYear());
+		if (grade.getSemester())
+			dto.setSemester(2);
+		else
+			dto.setSemester(1);
+		dto.setSubjectId(grade.getInfo().getTs().getSubject().getId());
+		dto.setSubjectName(grade.getInfo().getTs().getSubject().getName());
+		dto.setTeacherId(grade.getInfo().getTs().getTeacher().getId());
+		dto.setTeacherName(grade.getInfo().getTs().getTeacher().getName() + " " + grade.getInfo().getTs().getTeacher().getSurname());
+		dto.setStudentId(grade.getInfo().getStud().getId());
+		dto.setStudentName(grade.getInfo().getStud().getName() + " " + grade.getInfo().getStud().getSurname());
+		return dto;
 	}
 }
