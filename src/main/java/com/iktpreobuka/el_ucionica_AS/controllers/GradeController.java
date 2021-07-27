@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeGradeDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewGradeDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeGradeDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewGradeDTO;
 import com.iktpreobuka.el_ucionica_AS.repositories.GradeRepository;
 import com.iktpreobuka.el_ucionica_AS.services.GradeServices;
 import com.iktpreobuka.el_ucionica_AS.services.OtherServices;

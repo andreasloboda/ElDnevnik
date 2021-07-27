@@ -16,4 +16,6 @@ public interface SubjectRepository extends CrudRepository<SubjectEntity, Integer
 
 	List<SubjectEntity> findAllByTeachersTeacherId(Integer teachId);
 
+	List<SubjectEntity> findAllByTeachersStudentsStudId(Integer studId);
+
 }

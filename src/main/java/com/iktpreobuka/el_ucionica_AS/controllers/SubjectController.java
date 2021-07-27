@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeSubjectDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewSubjectDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeSubjectDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewSubjectDTO;
 import com.iktpreobuka.el_ucionica_AS.repositories.SubjectRepository;
 import com.iktpreobuka.el_ucionica_AS.services.OtherServices;
 import com.iktpreobuka.el_ucionica_AS.services.SubjectServices;
@@ -122,6 +122,26 @@ public class SubjectController {
 		return subServ.assingSubToGroup(subId, teachId, groupId);
 	}
 	
+	@Secured("ROLE_ADMIN")
+	@DeleteMapping("/subjects/{subId}/teacher/{teachId}/student/{studId}")
+	public ResponseEntity<?> removeFromStudent(@PathVariable Integer subId, @PathVariable Integer teachId, @PathVariable Integer studId) {
+		return subServ.removeSubFromStudent(subId, teachId, studId);
+	}
+	
+	@Secured("ROLE_ADMIN")
+	@DeleteMapping("/subjects/{subId}/teacher/{teachId}")
+	public ResponseEntity<?> unassignTeacher(@PathVariable Integer subId, @PathVariable Integer teachId) {
+		return subServ.removeTeacherFromSubject(subId, teachId);
+	}
+	
+	@Secured({"ROLE_ADMIN", "ROLE_STUDENT", "ROLE_PARENT"})
+	@GetMapping("/users/student/{studId}/subjects")
+	public ResponseEntity<?> getSubjetsFromStudent(@PathVariable Integer studId, HttpServletRequest request) {
+		boolean allowed = otherServ.amIAdmin(request) || otherServ.isThisMe(studId, request) || otherServ.amITheirParent(studId, request);
+		if (allowed)
+			return subServ.getSubsFromStudent(studId);
+		return new ResponseEntity<> ("You have no authority to see this information", HttpStatus.UNAUTHORIZED);
+	}
 	
 	
 	private String createErrorMessage(BindingResult result) {
@@ -129,8 +149,4 @@ public class SubjectController {
 
 	}
 	
-	//TODO See all subjects student studies
-	//TODO Delete teacher-subject combos
-	//TODO Delete STS combos
-	//TODO Edit STS and ST combos
 }

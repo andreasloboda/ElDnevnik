@@ -29,12 +29,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeUserDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.LoginDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewAdminDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewParentDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewTeachStudDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.PasswordDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeUserDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.LoginDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewAdminDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewParentDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewTeachStudDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.PasswordDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.util.Encryption;
 import com.iktpreobuka.el_ucionica_AS.controllers.util.UsersValidator;
 import com.iktpreobuka.el_ucionica_AS.entities.UserEntity;
@@ -196,7 +196,14 @@ public class UserController {
 		return new ResponseEntity<>("Wrong credentials", HttpStatus.UNAUTHORIZED);
 	}
 
-	//TODO get all students of a parent
+	@Secured({"ROLE_ADMIN", "ROLE_PARENT"})
+	@GetMapping("/users/parent/{id}")
+	public ResponseEntity<?> getParentsChildren (@PathVariable Integer id, HttpServletRequest request) {
+		boolean allowed = otherServ.isThisMe(id, request) || otherServ.amIAdmin(request);
+		if (allowed)
+			return userServ.getChildren(id);
+		return new ResponseEntity<>("User has no authority to see this information", HttpStatus.UNAUTHORIZED);
+	}
 	
 	// >>>>> Private methods below this line
 

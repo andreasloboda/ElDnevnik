@@ -2,8 +2,8 @@ package com.iktpreobuka.el_ucionica_AS.services;
 
 import org.springframework.http.ResponseEntity;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeGradeDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewGradeDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeGradeDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewGradeDTO;
 
 public interface GradeServices {
 

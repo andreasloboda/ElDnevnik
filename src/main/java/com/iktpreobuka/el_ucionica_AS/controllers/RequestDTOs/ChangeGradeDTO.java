@@ -1,26 +1,23 @@
-package com.iktpreobuka.el_ucionica_AS.controllers.DTOs;
+package com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
-public class NewGradeDTO {
-
-	@NotNull (message = "Student ID must be provided")
+public class ChangeGradeDTO {
 	private Integer studentID;
-	@NotNull (message = "Teacher ID must be provided")
 	private Integer teacherID;
-	@NotNull (message = "Subject ID must be provided")
 	private Integer subjectID;
-	@NotNull (message = "Grade must be provided")
 	@Min(value = 1, message = "Grade must be between 1 and 5")
 	@Max(value = 5, message = "Grade must be between 1 and 5")
 	private Integer grade;
+	@Min(value = 1, message = "Semester can have value 1 or 2")
+	@Max(value = 2, message = "Semester can have value 1 or 2")
+	private Integer semester;
 	
-	public NewGradeDTO() {
+	public ChangeGradeDTO() {
 		super();
 	}
-	public NewGradeDTO(Integer studentID, Integer teacherID, Integer subjectID, Integer grade) {
+	public ChangeGradeDTO(Integer studentID, Integer teacherID, Integer subjectID, Integer grade) {
 		super();
 		this.studentID = studentID;
 		this.teacherID = teacherID;
@@ -50,6 +47,12 @@ public class NewGradeDTO {
 	}
 	public void setGrade(Integer grade) {
 		this.grade = grade;
+	}
+	public Integer getSemester() {
+		return semester;
+	}
+	public void setSemester(Integer semester) {
+		this.semester = semester;
 	}
 	
 	

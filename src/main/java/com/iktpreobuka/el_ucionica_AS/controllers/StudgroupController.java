@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeGroupDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewGroupDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeGroupDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewGroupDTO;
 import com.iktpreobuka.el_ucionica_AS.repositories.StudgroupRepository;
 import com.iktpreobuka.el_ucionica_AS.services.GroupServices;
 

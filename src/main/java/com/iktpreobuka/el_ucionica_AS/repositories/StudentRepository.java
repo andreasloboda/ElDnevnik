@@ -10,4 +10,8 @@ public interface StudentRepository extends CrudRepository<StudentEntity, Integer
 
 	List<StudentEntity> findAllByStudgroupId(Integer groupId);
 
+	boolean existsByParentId(Integer id);
+
+	List<StudentEntity> findAllByParentId(Integer id);
+
 }

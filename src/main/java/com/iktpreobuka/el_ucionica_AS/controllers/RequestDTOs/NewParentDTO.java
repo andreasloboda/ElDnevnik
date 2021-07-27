@@ -1,4 +1,4 @@
-package com.iktpreobuka.el_ucionica_AS.controllers.DTOs;
+package com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

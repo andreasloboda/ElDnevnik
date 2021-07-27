@@ -7,11 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeUserDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewAdminDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewParentDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewTeachStudDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.PasswordDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeUserDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewAdminDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewParentDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewTeachStudDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.PasswordDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.util.Encryption;
 import com.iktpreobuka.el_ucionica_AS.entities.ParentEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.StudentEntity;
@@ -269,6 +269,17 @@ public class UserServicesImp implements UserServices{
 		student.setParent(parentRepo.findById(parId).get());
 		logger.info("Added parent " + parId + " to student " + studId);
 		return new ResponseEntity<> (studRepo.save(student), HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> getChildren(Integer id) {
+		if (!parentRepo.existsById(id)) {
+			return new ResponseEntity<> ("There is no parent with this id", HttpStatus.BAD_REQUEST);
+		}
+		if (!studRepo.existsByParentId(id)) {
+			return new ResponseEntity<> ("There is no students associated with this parent", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<> (studRepo.findAllByParentId(id), HttpStatus.OK);
 	}
 
 }

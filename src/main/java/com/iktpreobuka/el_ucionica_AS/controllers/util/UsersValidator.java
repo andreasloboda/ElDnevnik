@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeUserDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewAdminDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.PasswordDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeUserDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewAdminDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.PasswordDTO;
 
 @Component
 public class UsersValidator implements Validator{

@@ -2,11 +2,11 @@ package com.iktpreobuka.el_ucionica_AS.services;
 
 import org.springframework.http.ResponseEntity;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeUserDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewAdminDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewParentDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewTeachStudDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.PasswordDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeUserDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewAdminDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewParentDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewTeachStudDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.PasswordDTO;
 import com.iktpreobuka.el_ucionica_AS.entities.enums.UserRole;
 
 public interface UserServices {
@@ -28,5 +28,7 @@ public interface UserServices {
 	ResponseEntity<?> changePassword(Integer id, PasswordDTO password);
 
 	ResponseEntity<?> addParent(Integer studId, Integer parId);
+
+	ResponseEntity<?> getChildren(Integer id);
 
 }

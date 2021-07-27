@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeSubjectDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewSubjectDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeSubjectDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewSubjectDTO;
 import com.iktpreobuka.el_ucionica_AS.entities.StudentEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.SubjectEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.SutestEntity;
@@ -200,5 +200,37 @@ public class SubjectServicesImp implements SubjectServices{
 		}
 		logger.info("Assign subject " + subId + " taught by " + teachId + " to " + i + " students in group " + groupId);
 		return new ResponseEntity<> (students, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> removeSubFromStudent(Integer subId, Integer teachId, Integer studId) {
+		if (stsRepo.existsByStudIdAndTsTeacherIdAndTsSubjectId(studId, teachId, subId)) {
+			SutestEntity sts = stsRepo.findByStudIdAndTsTeacherIdAndTsSubjectId(studId, teachId, subId).get();
+			stsRepo.deleteById(sts.getId());
+			logger.info("Removed subject " + subId + " from student " + studId);
+			return new ResponseEntity<> (sts, HttpStatus.OK);
+		}
+		logger.info("Unsuccessful attempt at removing a subject from a student occured.");
+		return new ResponseEntity<> ("Error: This student isn't taught this subject by the teacher in question", HttpStatus.BAD_REQUEST);
+	}
+	
+	@Override
+	public ResponseEntity<?> removeTeacherFromSubject(Integer subId, Integer teachId) {
+		if (tsRepo.existsByTeacherIdAndSubjectId(teachId, subId)) {
+			TeachSubjEntity tse = tsRepo.findByTeacherIdAndSubjectId(teachId, subId).get();
+			tsRepo.deleteById(tse.getId());
+			logger.info("Unassigned teacher " + teachId + " from subject " + subId);
+			return new ResponseEntity<> (tse, HttpStatus.OK);
+		}
+		logger.info("Unsuccessful attempt at unassigning teacher from a subject occured.");
+		return new ResponseEntity<> ("Error: This teacher isn't assigned to this subject", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> getSubsFromStudent(Integer studId) {
+		if (studRepo.existsById(studId)) {
+			return new ResponseEntity<> (subRepo.findAllByTeachersStudentsStudId(studId), HttpStatus.OK);
+		}
+		return new ResponseEntity<> ("Error: This student doesn't exist", HttpStatus.BAD_REQUEST);
 	}
 }

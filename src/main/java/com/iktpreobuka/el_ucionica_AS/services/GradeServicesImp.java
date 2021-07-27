@@ -12,9 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeGradeDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.FinalGradeDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewGradeDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeGradeDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewGradeDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.FinalGradeDTO;
 import com.iktpreobuka.el_ucionica_AS.entities.GradeEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.SutestEntity;
 import com.iktpreobuka.el_ucionica_AS.repositories.GradeRepository;

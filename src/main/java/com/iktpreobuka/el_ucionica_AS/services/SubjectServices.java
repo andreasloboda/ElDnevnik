@@ -2,8 +2,8 @@ package com.iktpreobuka.el_ucionica_AS.services;
 
 import org.springframework.http.ResponseEntity;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeSubjectDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewSubjectDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeSubjectDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewSubjectDTO;
 
 public interface SubjectServices {
 
@@ -28,5 +28,11 @@ public interface SubjectServices {
 	ResponseEntity<?> assingSubToStudent(Integer subId, Integer teachId, Integer studId);
 
 	ResponseEntity<?> assingSubToGroup(Integer subId, Integer teachId, Integer groupId);
+
+	ResponseEntity<?> removeSubFromStudent(Integer subId, Integer teachId, Integer studId);
+
+	ResponseEntity<?> removeTeacherFromSubject(Integer subId, Integer teachId);
+
+	ResponseEntity<?> getSubsFromStudent(Integer studId);
 
 }

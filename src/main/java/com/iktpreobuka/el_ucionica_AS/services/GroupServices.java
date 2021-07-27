@@ -2,8 +2,8 @@ package com.iktpreobuka.el_ucionica_AS.services;
 
 import org.springframework.http.ResponseEntity;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeGroupDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewGroupDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeGroupDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewGroupDTO;
 
 public interface GroupServices {
 

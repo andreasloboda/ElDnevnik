@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.ChangeGroupDTO;
-import com.iktpreobuka.el_ucionica_AS.controllers.DTOs.NewGroupDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeGroupDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewGroupDTO;
 import com.iktpreobuka.el_ucionica_AS.entities.StudentEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.StudgroupEntity;
 import com.iktpreobuka.el_ucionica_AS.repositories.StudentRepository;
