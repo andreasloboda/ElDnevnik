@@ -67,20 +67,26 @@ public class GradeController {
 		return new ResponseEntity<> ("You have no authority to grade this student", HttpStatus.UNAUTHORIZED);
 	}
 	
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN", "ROLE_TEACHER"})
 	@PutMapping("/grades/{id}")
-	public ResponseEntity<?> changeExisting(@PathVariable Integer id, @Valid @RequestBody ChangeGradeDTO cGrade, BindingResult result){
+	public ResponseEntity<?> changeExisting(@PathVariable Integer id, @Valid @RequestBody ChangeGradeDTO cGrade, BindingResult result, HttpServletRequest request){
 		if (result.hasErrors()) {
 			logger.info("Attempted to alter a grade, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
-		return gradeServ.changeGrade(id, cGrade);
+		boolean allowed = otherServ.amIAdmin(request) || otherServ.isThisMyGrade(id, request);
+		if (allowed)
+			return gradeServ.changeGrade(id, cGrade);
+		return new ResponseEntity<> ("You have no authority to alter this grade", HttpStatus.UNAUTHORIZED);
 	}
 	
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN", "ROLE_TEACHER"})
 	@DeleteMapping("grades/{id}")
-	public ResponseEntity<?> deleteGrade(@PathVariable Integer id) {
-		return gradeServ.deleteGrade(id);
+	public ResponseEntity<?> deleteGrade(@PathVariable Integer id, HttpServletRequest request) {
+		boolean allowed = otherServ.amIAdmin(request) || otherServ.isThisMyGrade(id, request);
+		if (allowed)
+			return gradeServ.deleteGrade(id);
+		return new ResponseEntity<> ("You have no authority to delete this grade", HttpStatus.UNAUTHORIZED);
 	}
 	
 	@Secured({"ROLE_ADMIN", "ROLE_STUDENT", "ROLE_PARENT"})

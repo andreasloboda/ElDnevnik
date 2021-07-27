@@ -143,7 +143,7 @@ public class OtherServicesImp implements OtherServices{
 
 	@Override
 	public boolean amITheirParent(Integer stud, HttpServletRequest request) {
-		if (studRepo.existsById(stud)) {
+		if ((studRepo.existsById(stud))&&(studRepo.findById(stud).get().getParent()!=null)) {
 			String username = getUsersUsername(request);
 			if (username != null) {
 				if (studRepo.findById(stud).get().getParent().getId() == userRepo.findByUsername(username).get().getId())
@@ -181,11 +181,12 @@ public class OtherServicesImp implements OtherServices{
 	public boolean isThisMyGrade(Integer id, HttpServletRequest request) {
 		if (gradeRepo.existsById(id)) {
 			GradeEntity grade = gradeRepo.findById(id).get();
-			if (isThisMe(grade.getInfo().getStud().getId(), request))
+			UserRole role = userRepo.findByUsername(getUsersUsername(request)).get().getRole();
+			if (role.equals(UserRole.ROLE_STUDENT) && (isThisMe(grade.getInfo().getStud().getId(), request)))
 				return true;
-			if (isThisMe(grade.getInfo().getTs().getTeacher().getId(), request))
+			if (role.equals(UserRole.ROLE_TEACHER) && (isThisMe(grade.getInfo().getTs().getTeacher().getId(), request)))
 				return true;
-			if (isThisMe(grade.getInfo().getStud().getParent().getId(), request))
+			if (role.equals(UserRole.ROLE_PARENT) && (isThisMe(grade.getInfo().getStud().getParent().getId(), request)))
 				return true;
 		}
 		return false;

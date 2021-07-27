@@ -88,7 +88,6 @@ public class UserController {
 		boolean allowed = otherServ.isThisMe(id, request) || otherServ.amIAdmin(request) || otherServ.amITheirParent(id, request) || otherServ.amITheirTeacher(id, request);
 		if (allowed)
 			return userServ.getByID(id);
-		logger.info("Attempt was made to alter an account not belonging to the user.");
 		return new ResponseEntity<>("User has no authority to look at this account", HttpStatus.UNAUTHORIZED);
 	}
 
