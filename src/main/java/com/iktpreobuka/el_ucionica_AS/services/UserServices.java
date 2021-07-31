@@ -31,4 +31,6 @@ public interface UserServices {
 
 	ResponseEntity<?> getChildren(Integer id);
 
+	ResponseEntity<?> getAll();
+
 }

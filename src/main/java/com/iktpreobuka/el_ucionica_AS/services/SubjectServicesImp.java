@@ -1,5 +1,6 @@
 package com.iktpreobuka.el_ucionica_AS.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,10 +12,14 @@ import org.springframework.stereotype.Service;
 
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeSubjectDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewSubjectDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.StudentDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.SubjectDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.TeacherDTO;
 import com.iktpreobuka.el_ucionica_AS.entities.StudentEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.SubjectEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.SutestEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.TeachSubjEntity;
+import com.iktpreobuka.el_ucionica_AS.entities.TeacherEntity;
 import com.iktpreobuka.el_ucionica_AS.repositories.StudentRepository;
 import com.iktpreobuka.el_ucionica_AS.repositories.StudgroupRepository;
 import com.iktpreobuka.el_ucionica_AS.repositories.SubjectRepository;
@@ -37,27 +42,43 @@ public class SubjectServicesImp implements SubjectServices{
 	private SutestRepository stsRepo;
 	@Autowired
 	private StudgroupRepository groupRepo;
+	@Autowired
+	private DtoServices dtos;
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Override
 	public ResponseEntity<?> getSubByYear(Integer yearNo) {
-		if ((yearNo>0)&&(yearNo<9))
-			return new ResponseEntity<> (subRepo.findAllByYear(yearNo), HttpStatus.OK);
+		if ((yearNo>0)&&(yearNo<9)) {
+			List<SubjectEntity> subList = subRepo.findAllByYear(yearNo);
+			if (subList.isEmpty())
+				return new ResponseEntity<> ("No Subjects found for that year", HttpStatus.NOT_FOUND);
+			List<SubjectDTO> response = new ArrayList<>();
+			for (SubjectEntity sub : subList)
+				response.add(dtos.subjectToDTO(sub));
+			return new ResponseEntity<> (response, HttpStatus.OK);
+		}
 		return new ResponseEntity<> ("Error: Year must be between 1 and 8", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
 	public ResponseEntity<?> getSubByName(String name) {
-		if (subRepo.existsByName(name))
-			return new ResponseEntity<> (subRepo.findAllByName(name), HttpStatus.OK);
+		if (subRepo.existsByName(name)) {
+			List<SubjectEntity> subList = subRepo.findAllByName(name);
+			if (subList.isEmpty())
+				return new ResponseEntity<> ("No Subjects found with that name", HttpStatus.NOT_FOUND);
+			List<SubjectDTO> response = new ArrayList<>();
+			for (SubjectEntity sub : subList)
+				response.add(dtos.subjectToDTO(sub));
+			return new ResponseEntity<> (response, HttpStatus.OK);
+		}
 		return new ResponseEntity<> ("Error: Subject not found", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
 	public ResponseEntity<?> getSubById(Integer id) {
 		if (subRepo.existsById(id))
-			return new ResponseEntity<> (subRepo.findById(id).get(), HttpStatus.OK);
+			return new ResponseEntity<> (dtos.subjectToDTO(subRepo.findById(id).get()), HttpStatus.OK);
 		return new ResponseEntity<> ("Error: Subject not found", HttpStatus.BAD_REQUEST);
 	}
 
@@ -68,7 +89,7 @@ public class SubjectServicesImp implements SubjectServices{
 		subject.setHours(newSub.getHours());
 		subject.setYear(newSub.getYear());
 		logger.info("Created new subject named " + subject.getName() + " with " + subject.getHours() + " hours a week, for year " + subject.getYear());
-		return new ResponseEntity<> (subRepo.save(subject), HttpStatus.OK);
+		return new ResponseEntity<> (dtos.subjectToDTO(subRepo.save(subject)), HttpStatus.OK);
 	}
 
 	@Override
@@ -82,7 +103,7 @@ public class SubjectServicesImp implements SubjectServices{
 			if (sub.getYear()!=null)
 				subject.setYear(sub.getYear());
 			logger.warn("Altered subject with ID " + subject.getId() + ". Please, check details.");
-			return new ResponseEntity<> (subRepo.save(subject), HttpStatus.OK);
+			return new ResponseEntity<> (dtos.subjectToDTO(subRepo.save(subject)), HttpStatus.OK);
 		}
 		logger.info("Attempted to alter a non-existant subject.");
 		return new ResponseEntity<> ("Error: Subject not found", HttpStatus.BAD_REQUEST);
@@ -94,7 +115,7 @@ public class SubjectServicesImp implements SubjectServices{
 			SubjectEntity subject = subRepo.findById(id).get();
 			subRepo.deleteById(id);
 			logger.info("Deleted subject with ID " + subject.getId());
-			return new ResponseEntity<> (subject, HttpStatus.OK);
+			return new ResponseEntity<> (dtos.subjectToDTO(subject), HttpStatus.OK);
 		}
 		logger.info("Attempted to delete a non-existant subject.");
 		return new ResponseEntity<> ("Error: Subject not found", HttpStatus.BAD_REQUEST);
@@ -112,7 +133,7 @@ public class SubjectServicesImp implements SubjectServices{
 				tse.setSubject(subRepo.findById(subId).get());
 				tse.setTeacher(teachRepo.findById(teachId).get());
 				logger.info("Teacher " + teachId + " is assigned to subject " + subId);
-				return new ResponseEntity<> (tsRepo.save(tse), HttpStatus.OK);
+				return new ResponseEntity<> (dtos.tsToDTO(tsRepo.save(tse)), HttpStatus.OK);
 			}
 			logger.info("Attempted to add a non-existant teacher to a subject.");
 			return new ResponseEntity<> ("Error: Teacher not found", HttpStatus.BAD_REQUEST);
@@ -125,7 +146,13 @@ public class SubjectServicesImp implements SubjectServices{
 	public ResponseEntity<?> findTeachersForSub(Integer subId) {
 		if (subRepo.existsById(subId)) {
 			if (tsRepo.existsBySubjectId(subId)) {
-				return new ResponseEntity<> (teachRepo.findAllBySubjectsSubjectId(subId), HttpStatus.OK);
+				List<TeacherEntity> teachers = teachRepo.findAllBySubjectsSubjectId(subId);
+				if (teachers.isEmpty())
+					return new ResponseEntity<> ("No teachers found for the subject", HttpStatus.NOT_FOUND);
+				List<TeacherDTO> response = new ArrayList<>();
+				for (TeacherEntity user : teachers)
+					response.add(dtos.teacherToDTO(user));
+				return new ResponseEntity<> (response, HttpStatus.OK);
 			}
 			return new ResponseEntity<> ("Error: Subject not connected to any teacher", HttpStatus.BAD_REQUEST);
 		}
@@ -136,7 +163,13 @@ public class SubjectServicesImp implements SubjectServices{
 	public ResponseEntity<?> findSubsForTeacher(Integer teachId) {
 		if (teachRepo.existsById(teachId)) {
 			if (tsRepo.existsByTeacherId(teachId)) {
-				return new ResponseEntity<> (subRepo.findAllByTeachersTeacherId(teachId), HttpStatus.OK);
+				List<SubjectEntity> subList = subRepo.findAllByTeachersTeacherId(teachId);
+				if (subList.isEmpty())
+					return new ResponseEntity<> ("No Subjects found for that teacher", HttpStatus.NOT_FOUND);
+				List<SubjectDTO> response = new ArrayList<>();
+				for (SubjectEntity sub : subList)
+					response.add(dtos.subjectToDTO(sub));
+				return new ResponseEntity<> (response, HttpStatus.OK);
 			}
 			return new ResponseEntity<> ("Error: Teacher not connected to any subjects", HttpStatus.BAD_REQUEST);
 		}
@@ -168,7 +201,7 @@ public class SubjectServicesImp implements SubjectServices{
 		stse.setTs(tse);
 		stse.setStud(stud);
 		logger.info("Student " + studId + " assigned to subject " + subId + " taught by teacher " + teachId);
-		return new ResponseEntity<> (stsRepo.save(stse), HttpStatus.OK);
+		return new ResponseEntity<> (dtos.stsToDTO(stsRepo.save(stse)), HttpStatus.OK);
 	}
 
 	@Override
@@ -188,6 +221,7 @@ public class SubjectServicesImp implements SubjectServices{
 			return new ResponseEntity<> ("Error: Subject is not meant for the group's year", HttpStatus.BAD_REQUEST);
 		}
 		List<StudentEntity> students = studRepo.findAllByStudgroupId(groupId);
+		List<StudentDTO> response = new ArrayList<>();
 		int i = 0;
 		for (StudentEntity se : students) {
 			if (!stsRepo.existsByTsIdAndStudId(tse.getId(), se.getId())) {
@@ -196,10 +230,15 @@ public class SubjectServicesImp implements SubjectServices{
 				stse.setStud(se);
 				stsRepo.save(stse);
 				i++;
+				response.add(dtos.studentToDTO(se));
 			}		
 		}
+		if (response.isEmpty()) {
+			logger.info("Attempted to assign subject to a student group, but all students already listen to it");
+			return new ResponseEntity<> ("All students in this group already listen to this subject", HttpStatus.OK);
+		}
 		logger.info("Assign subject " + subId + " taught by " + teachId + " to " + i + " students in group " + groupId);
-		return new ResponseEntity<> (students, HttpStatus.OK);
+		return new ResponseEntity<> (response, HttpStatus.OK);
 	}
 
 	@Override
@@ -208,7 +247,7 @@ public class SubjectServicesImp implements SubjectServices{
 			SutestEntity sts = stsRepo.findByStudIdAndTsTeacherIdAndTsSubjectId(studId, teachId, subId).get();
 			stsRepo.deleteById(sts.getId());
 			logger.info("Removed subject " + subId + " from student " + studId);
-			return new ResponseEntity<> (sts, HttpStatus.OK);
+			return new ResponseEntity<> (dtos.stsToDTO(sts), HttpStatus.OK);
 		}
 		logger.info("Unsuccessful attempt at removing a subject from a student occured.");
 		return new ResponseEntity<> ("Error: This student isn't taught this subject by the teacher in question", HttpStatus.BAD_REQUEST);
@@ -220,7 +259,7 @@ public class SubjectServicesImp implements SubjectServices{
 			TeachSubjEntity tse = tsRepo.findByTeacherIdAndSubjectId(teachId, subId).get();
 			tsRepo.deleteById(tse.getId());
 			logger.info("Unassigned teacher " + teachId + " from subject " + subId);
-			return new ResponseEntity<> (tse, HttpStatus.OK);
+			return new ResponseEntity<> (dtos.tsToDTO(tse), HttpStatus.OK);
 		}
 		logger.info("Unsuccessful attempt at unassigning teacher from a subject occured.");
 		return new ResponseEntity<> ("Error: This teacher isn't assigned to this subject", HttpStatus.BAD_REQUEST);
@@ -229,8 +268,25 @@ public class SubjectServicesImp implements SubjectServices{
 	@Override
 	public ResponseEntity<?> getSubsFromStudent(Integer studId) {
 		if (studRepo.existsById(studId)) {
-			return new ResponseEntity<> (subRepo.findAllByTeachersStudentsStudId(studId), HttpStatus.OK);
+			List<SubjectEntity> subList = subRepo.findAllByTeachersStudentsStudId(studId);
+			if (subList.isEmpty())
+				return new ResponseEntity<> ("No Subjects found for that student", HttpStatus.NOT_FOUND);
+			List<SubjectDTO> response = new ArrayList<>();
+			for (SubjectEntity sub : subList)
+				response.add(dtos.subjectToDTO(sub));
+			return new ResponseEntity<> (response, HttpStatus.OK);
 		}
 		return new ResponseEntity<> ("Error: This student doesn't exist", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> getAllSubs() {
+		List<SubjectEntity> subList = (List<SubjectEntity>) subRepo.findAll();
+		if (subList.isEmpty())
+			return new ResponseEntity<> ("No Subjects found", HttpStatus.NOT_FOUND);
+		List<SubjectDTO> response = new ArrayList<>();
+		for (SubjectEntity sub : subList)
+			response.add(dtos.subjectToDTO(sub));
+		return new ResponseEntity<> (response, HttpStatus.OK);
 	}
 }

@@ -41,6 +41,7 @@ import com.iktpreobuka.el_ucionica_AS.entities.UserEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.enums.UserRole;
 import com.iktpreobuka.el_ucionica_AS.repositories.UserRepository;
 import com.iktpreobuka.el_ucionica_AS.services.OtherServices;
+import com.iktpreobuka.el_ucionica_AS.services.SecurityServices;
 import com.iktpreobuka.el_ucionica_AS.services.UserServices;
 
 import io.jsonwebtoken.Jwts;
@@ -56,7 +57,10 @@ public class UserController {
 	@Autowired
 	private UsersValidator passValidate;
 	@Autowired
+	private SecurityServices secServ;
+	@Autowired
 	private OtherServices otherServ;
+	
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -73,7 +77,7 @@ public class UserController {
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/users/search")
 	public ResponseEntity<?> getAll() {
-		return new ResponseEntity<>(userRepo.findAll(), HttpStatus.OK);
+		return userServ.getAll();
 	}
 	
 	@Secured("ROLE_ADMIN")
@@ -85,7 +89,7 @@ public class UserController {
 	@Secured({"ROLE_ADMIN", "ROLE_STUDENT", "ROLE_PARENT", "ROLE_TEACHER"})
 	@GetMapping("/users/search/id/{id}")
 	public ResponseEntity<?> getById(@PathVariable Integer id, HttpServletRequest request) {
-		boolean allowed = otherServ.isThisMe(id, request) || otherServ.amIAdmin(request) || otherServ.amITheirParent(id, request) || otherServ.amITheirTeacher(id, request);
+		boolean allowed = secServ.isThisMe(id, request) || secServ.amIAdmin(request) || secServ.amITheirParent(id, request) || secServ.amITheirTeacher(id, request);
 		if (allowed)
 			return userServ.getByID(id);
 		return new ResponseEntity<>("User has no authority to look at this account", HttpStatus.UNAUTHORIZED);
@@ -145,7 +149,7 @@ public class UserController {
 			logger.info("Attempted to alter an account, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
-		boolean allowed = otherServ.isThisMe(id, request) || otherServ.amIAdmin(request);
+		boolean allowed = secServ.isThisMe(id, request) || secServ.amIAdmin(request);
 		if (allowed)
 			return userServ.changeUser(id, newInfo);
 		logger.info("Attempt was made to alter an account not belonging to the user.");
@@ -160,7 +164,7 @@ public class UserController {
 			logger.info("Attempted to change a password, couldn't validate information");
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
 		}
-		boolean allowed = otherServ.isThisMe(id, request);
+		boolean allowed = secServ.isThisMe(id, request);
 		if (allowed)
 			return userServ.changePassword(id, password);
 		logger.info("Attempt was made to alter password not belonging to the user.");
@@ -199,7 +203,7 @@ public class UserController {
 	@Secured({"ROLE_ADMIN", "ROLE_PARENT"})
 	@GetMapping("/users/parent/{id}")
 	public ResponseEntity<?> getParentsChildren (@PathVariable Integer id, HttpServletRequest request) {
-		boolean allowed = otherServ.isThisMe(id, request) || otherServ.amIAdmin(request);
+		boolean allowed = secServ.isThisMe(id, request) || secServ.amIAdmin(request);
 		if (allowed)
 			return userServ.getChildren(id);
 		return new ResponseEntity<>("User has no authority to see this information", HttpStatus.UNAUTHORIZED);

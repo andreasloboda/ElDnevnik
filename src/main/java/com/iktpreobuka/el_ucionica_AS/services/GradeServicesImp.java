@@ -34,6 +34,8 @@ public class GradeServicesImp implements GradeServices{
 	@Autowired
 	private StudentRepository studRepo;
 	@Autowired
+	private DtoServices dtos;
+	@Autowired
 	private OtherServices otherServ;
 		
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -60,13 +62,13 @@ public class GradeServicesImp implements GradeServices{
 			grade.setSemester(true);
 		logger.info("New grade made successfully. Student " + newGrade.getStudentID() + " got " + newGrade.getGrade() + " in Subject" + newGrade.getSubjectID() + " from teacher " + newGrade.getTeacherID() + ".");
 		otherServ.informParentAboutGrade(grade);
-		return new ResponseEntity<> (gradeToDTO(gradeRepo.save(grade)), HttpStatus.OK);
+		return new ResponseEntity<> (dtos.gradeToDTO(gradeRepo.save(grade)), HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<?> findGrade(Integer id) {
 		if (gradeRepo.existsById(id))
-			return new ResponseEntity<> (gradeToDTO(gradeRepo.findById(id).get()), HttpStatus.OK);
+			return new ResponseEntity<> (dtos.gradeToDTO(gradeRepo.findById(id).get()), HttpStatus.OK);
 		return new ResponseEntity<> ("Grade does not exist", HttpStatus.NOT_FOUND);
 	}
 
@@ -128,7 +130,7 @@ public class GradeServicesImp implements GradeServices{
 		}
 		log = log + ("PLEASE CHECK FOR ACCURACY.");
 		logger.warn(log);
-		return new ResponseEntity<> (gradeToDTO(gradeRepo.save(grade)), HttpStatus.OK);
+		return new ResponseEntity<> (dtos.gradeToDTO(gradeRepo.save(grade)), HttpStatus.OK);
 	}
 
 	@Override
@@ -140,7 +142,7 @@ public class GradeServicesImp implements GradeServices{
 		GradeEntity grade = gradeRepo.findById(id).get();
 		gradeRepo.deleteById(id);
 		logger.info("Deleted a grade by ID " + grade.getId());
-		return new ResponseEntity<> (gradeToDTO(grade), HttpStatus.OK);
+		return new ResponseEntity<> (dtos.gradeToDTO(grade), HttpStatus.OK);
 	}
 
 	@Override
@@ -152,7 +154,7 @@ public class GradeServicesImp implements GradeServices{
 			return new ResponseEntity<> ("Student has no grades", HttpStatus.NOT_FOUND);
 		List<GradeDTO> response = new ArrayList<GradeDTO>();
 		for (GradeEntity grade : gradesList)
-			response.add(gradeToDTO(grade));
+			response.add(dtos.gradeToDTO(grade));
 		return new ResponseEntity<> (response, HttpStatus.OK);
 	}
 
@@ -167,7 +169,7 @@ public class GradeServicesImp implements GradeServices{
 			return new ResponseEntity<> ("Student has no grades for this subject", HttpStatus.NOT_FOUND);
 		List<GradeDTO> response = new ArrayList<GradeDTO>();
 		for (GradeEntity grade : gradesList)
-			response.add(gradeToDTO(grade));
+			response.add(dtos.gradeToDTO(grade));
 		return new ResponseEntity<> (response, HttpStatus.OK);
 	}
 
@@ -240,25 +242,7 @@ public class GradeServicesImp implements GradeServices{
 			return new ResponseEntity<> ("No grades in database", HttpStatus.NOT_FOUND);
 		List<GradeDTO> response = new ArrayList<GradeDTO>();
 		for (GradeEntity grade : gradesList)
-			response.add(gradeToDTO(grade));
+			response.add(dtos.gradeToDTO(grade));
 		return new ResponseEntity<> (response, HttpStatus.OK);
-	}
-	
-	private GradeDTO gradeToDTO(GradeEntity grade) {
-		GradeDTO dto = new GradeDTO();
-		dto.setGrade(grade.getGrade());
-		dto.setGradeId(grade.getId());
-		dto.setYear(grade.getYear());
-		if (grade.getSemester())
-			dto.setSemester(2);
-		else
-			dto.setSemester(1);
-		dto.setSubjectId(grade.getInfo().getTs().getSubject().getId());
-		dto.setSubjectName(grade.getInfo().getTs().getSubject().getName());
-		dto.setTeacherId(grade.getInfo().getTs().getTeacher().getId());
-		dto.setTeacherName(grade.getInfo().getTs().getTeacher().getName() + " " + grade.getInfo().getTs().getTeacher().getSurname());
-		dto.setStudentId(grade.getInfo().getStud().getId());
-		dto.setStudentName(grade.getInfo().getStud().getName() + " " + grade.getInfo().getStud().getSurname());
-		return dto;
 	}
 }

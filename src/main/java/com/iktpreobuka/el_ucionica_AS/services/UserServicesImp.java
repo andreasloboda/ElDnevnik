@@ -1,5 +1,8 @@
 package com.iktpreobuka.el_ucionica_AS.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,11 @@ import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewAdminDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewParentDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewTeachStudDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.PasswordDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.AdminDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.ParentDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.StudentDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.TeacherDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.UsersDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.util.Encryption;
 import com.iktpreobuka.el_ucionica_AS.entities.ParentEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.StudentEntity;
@@ -34,22 +42,48 @@ public class UserServicesImp implements UserServices{
 	private StudentRepository studRepo;
 	@Autowired
 	private ParentRepository parentRepo;
+	@Autowired
+	private DtoServices dtos;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
 	public ResponseEntity<?> getByRole(String role) {
 		if (role.equalsIgnoreCase("admin")) {
-			return new ResponseEntity<> (userRepo.findAllByRole(UserRole.ROLE_ADMIN), HttpStatus.OK);
+			List<UserEntity> admins = userRepo.findAllByRole(UserRole.ROLE_ADMIN);
+			if (admins.isEmpty())
+				return new ResponseEntity<> ("No admins found", HttpStatus.NOT_FOUND);
+			List<AdminDTO> response = new ArrayList<>();
+			for (UserEntity user : admins)
+				response.add(dtos.adminToDTO(user));
+			return new ResponseEntity<> (response, HttpStatus.OK);
 		}
 		if (role.equalsIgnoreCase("teacher")) {
-			return new ResponseEntity<> (teacherRepo.findAll(), HttpStatus.OK);
+			List<TeacherEntity> teachers = (List<TeacherEntity>) teacherRepo.findAll();
+			if (teachers.isEmpty())
+				return new ResponseEntity<> ("No teachers found", HttpStatus.NOT_FOUND);
+			List<TeacherDTO> response = new ArrayList<>();
+			for (TeacherEntity user : teachers)
+				response.add(dtos.teacherToDTO(user));
+			return new ResponseEntity<> (response, HttpStatus.OK);
 		}
 		if (role.equalsIgnoreCase("student")) {
-			return new ResponseEntity<> (studRepo.findAll(), HttpStatus.OK);
+			List<StudentEntity> students = (List<StudentEntity>) studRepo.findAll();
+			if (students.isEmpty())
+				return new ResponseEntity<> ("No students found", HttpStatus.NOT_FOUND);
+			List<StudentDTO> response = new ArrayList<>();
+			for (StudentEntity user : students)
+				response.add(dtos.studentToDTO(user));
+			return new ResponseEntity<> (response, HttpStatus.OK);
 		}
 		if (role.equalsIgnoreCase("parent")) {
-			return new ResponseEntity<> (parentRepo.findAll(), HttpStatus.OK);
+			List<ParentEntity> parents = (List<ParentEntity>) parentRepo.findAll();
+			if (parents.isEmpty())
+				return new ResponseEntity<> ("No parents found", HttpStatus.NOT_FOUND);
+			List<ParentDTO> response = new ArrayList<>();
+			for (ParentEntity user : parents)
+				response.add(dtos.parentToDTO(user));
+			return new ResponseEntity<> (response, HttpStatus.OK);
 		}
 		return new ResponseEntity<>("Error: invalid role", HttpStatus.BAD_REQUEST);
 	}
@@ -59,13 +93,13 @@ public class UserServicesImp implements UserServices{
 		if (userRepo.existsById(id)) {
 			UserRole type = userRepo.findById(id).get().getRole();
 			if (type == UserRole.ROLE_ADMIN)
-				return new ResponseEntity<> (userRepo.findById(id), HttpStatus.OK);
+				return new ResponseEntity<> (dtos.adminToDTO(userRepo.findById(id).get()), HttpStatus.OK);
 			if (type == UserRole.ROLE_PARENT)
-				return new ResponseEntity<> (parentRepo.findById(id), HttpStatus.OK);
+				return new ResponseEntity<> (dtos.parentToDTO(parentRepo.findById(id).get()), HttpStatus.OK);
 			if (type == UserRole.ROLE_STUDENT)
-				return new ResponseEntity<> (studRepo.findById(id), HttpStatus.OK);
+				return new ResponseEntity<> (dtos.studentToDTO(studRepo.findById(id).get()), HttpStatus.OK);
 			if (type == UserRole.ROLE_TEACHER)
-				return new ResponseEntity<> (teacherRepo.findById(id), HttpStatus.OK);
+				return new ResponseEntity<> (dtos.teacherToDTO(teacherRepo.findById(id).get()), HttpStatus.OK);
 		}
 		return new ResponseEntity<> ("Error: User does not exist", HttpStatus.BAD_REQUEST);
 	}
@@ -81,7 +115,7 @@ public class UserServicesImp implements UserServices{
 		user.setRole(UserRole.ROLE_ADMIN);
 		user.setUsername(newAdmin.getUsername());
 		logger.info("New admin account created");
-		return new ResponseEntity<>(userRepo.save(user), HttpStatus.CREATED);
+		return new ResponseEntity<>(dtos.adminToDTO(userRepo.save(user)), HttpStatus.CREATED);
 	}
 
 	@Override
@@ -101,7 +135,7 @@ public class UserServicesImp implements UserServices{
 			newUser.setSurname(user.getSurname());
 			newUser.setUsername(user.getUsername());
 			logger.info("New student account created");
-			return new ResponseEntity<>(studRepo.save(newUser), HttpStatus.OK);
+			return new ResponseEntity<>(dtos.studentToDTO(studRepo.save(newUser)), HttpStatus.OK);
 		}
 		if (role == UserRole.ROLE_TEACHER) {
 			TeacherEntity newUser = new TeacherEntity();
@@ -111,7 +145,7 @@ public class UserServicesImp implements UserServices{
 			newUser.setSurname(user.getSurname());
 			newUser.setUsername(user.getUsername());
 			logger.info("New teacher account created");
-			return new ResponseEntity<>(teacherRepo.save(newUser), HttpStatus.OK);
+			return new ResponseEntity<>(dtos.teacherToDTO(teacherRepo.save(newUser)), HttpStatus.OK);
 		}
 		return new ResponseEntity<>("Error: Wrong Role", HttpStatus.BAD_REQUEST);
 	}
@@ -130,7 +164,7 @@ public class UserServicesImp implements UserServices{
 		newUser.setUsername(user.getUsername());
 		newUser.setEmail(user.getEmail());
 		logger.info("New parent account created");
-		return new ResponseEntity<> (parentRepo.save(newUser), HttpStatus.OK);
+		return new ResponseEntity<> (dtos.parentToDTO(parentRepo.save(newUser)), HttpStatus.OK);
 	}
 
 	@Override
@@ -141,25 +175,25 @@ public class UserServicesImp implements UserServices{
 				UserEntity user = userRepo.findById(id).get();
 				userRepo.deleteById(id);
 				logger.info("Deleted Admin account with ID " + user.getId());
-				return new ResponseEntity<> (user, HttpStatus.OK);
+				return new ResponseEntity<> (dtos.adminToDTO(user), HttpStatus.OK);
 			}
 			if (role == UserRole.ROLE_TEACHER) {
 				TeacherEntity user = teacherRepo.findById(id).get();
 				teacherRepo.deleteById(id);
 				logger.info("Deleted Teacher account with ID " + user.getId());
-				return new ResponseEntity<> (user, HttpStatus.OK);
+				return new ResponseEntity<> (dtos.teacherToDTO(user), HttpStatus.OK);
 			}
 			if (role == UserRole.ROLE_STUDENT) {
 				StudentEntity user = studRepo.findById(id).get();
 				studRepo.deleteById(id);
 				logger.info("Deleted Student account with ID " + user.getId());
-				return new ResponseEntity<> (user, HttpStatus.OK);
+				return new ResponseEntity<> (dtos.studentToDTO(user), HttpStatus.OK);
 			}
 			if (role == UserRole.ROLE_PARENT) {
 				ParentEntity user = parentRepo.findById(id).get();
 				parentRepo.deleteById(id);
 				logger.info("Deleted Parent account with ID " + user.getId());
-				return new ResponseEntity<> (user, HttpStatus.OK);
+				return new ResponseEntity<> (dtos.parentToDTO(user), HttpStatus.OK);
 			}
 		}
 		logger.info("Attempted to delete a non-existant account");
@@ -182,7 +216,7 @@ public class UserServicesImp implements UserServices{
 						user.setUsername(newInfo.getUsername());
 				}
 				logger.warn("Altered an Admin account, please check the information");
-				return new ResponseEntity<> (userRepo.save(user), HttpStatus.OK);
+				return new ResponseEntity<> (dtos.adminToDTO(userRepo.save(user)), HttpStatus.OK);
 			}
 			if (role == UserRole.ROLE_TEACHER) {
 				TeacherEntity user = teacherRepo.findById(id).get();
@@ -199,7 +233,7 @@ public class UserServicesImp implements UserServices{
 				if(newInfo.getSurname()!=null)
 					user.setSurname(newInfo.getSurname());
 				logger.warn("Altered a Teacher account, please check the information");
-				return new ResponseEntity<> (teacherRepo.save(user), HttpStatus.OK);
+				return new ResponseEntity<> (dtos.teacherToDTO(teacherRepo.save(user)), HttpStatus.OK);
 			}
 			if (role == UserRole.ROLE_STUDENT) {
 				StudentEntity user = studRepo.findById(id).get();
@@ -216,7 +250,7 @@ public class UserServicesImp implements UserServices{
 				if(newInfo.getSurname()!=null)
 					user.setSurname(newInfo.getSurname());
 				logger.warn("Altered a Student account, please check the information");
-				return new ResponseEntity<> (studRepo.save(user), HttpStatus.OK);
+				return new ResponseEntity<> (dtos.studentToDTO(studRepo.save(user)), HttpStatus.OK);
 			}
 			if (role == UserRole.ROLE_PARENT) {
 				ParentEntity user = parentRepo.findById(id).get();
@@ -235,7 +269,7 @@ public class UserServicesImp implements UserServices{
 				if(newInfo.getEmail()!=null)
 					user.setEmail(newInfo.getEmail());
 				logger.warn("Altered a Parent account, please check the information");
-				return new ResponseEntity<> (parentRepo.save(user), HttpStatus.OK);
+				return new ResponseEntity<> (dtos.parentToDTO(parentRepo.save(user)), HttpStatus.OK);
 			}
 		}
 		return new ResponseEntity<> ("Error: User does not exist", HttpStatus.BAD_REQUEST);
@@ -248,7 +282,7 @@ public class UserServicesImp implements UserServices{
 			if (Encryption.validatePassword(password.getOldPass(), user.getPassword())) {
 				user.setPassword(Encryption.getPassEncoded(password.getNewPass()));
 				logger.info("User " + id + " changed their password");
-				return new ResponseEntity<> (userRepo.save(user), HttpStatus.OK);
+				return new ResponseEntity<> ("Password successfully altered", HttpStatus.OK);
 			}
 		}
 		logger.info("Attempted to change password, but a mismatch happened");
@@ -268,7 +302,7 @@ public class UserServicesImp implements UserServices{
 		StudentEntity student = studRepo.findById(studId).get();
 		student.setParent(parentRepo.findById(parId).get());
 		logger.info("Added parent " + parId + " to student " + studId);
-		return new ResponseEntity<> (studRepo.save(student), HttpStatus.OK);
+		return new ResponseEntity<> (dtos.studentToDTO(studRepo.save(student)), HttpStatus.OK);
 	}
 
 	@Override
@@ -279,7 +313,38 @@ public class UserServicesImp implements UserServices{
 		if (!studRepo.existsByParentId(id)) {
 			return new ResponseEntity<> ("There is no students associated with this parent", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<> (studRepo.findAllByParentId(id), HttpStatus.OK);
+		List<StudentEntity> children = studRepo.findAllByParentId(id);
+		List<StudentDTO> result = new ArrayList<>();
+		for (StudentEntity child : children)
+			result.add(dtos.studentToDTO(child));
+		return new ResponseEntity<> (result, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> getAll() {
+		List<UserEntity> userList = (List<UserEntity>) userRepo.findAll();
+		if (userList.isEmpty())
+			return new ResponseEntity<> ("There are no users in database", HttpStatus.NOT_FOUND);
+		List<AdminDTO> admins = new ArrayList<>();
+		List<TeacherDTO> teachers = new ArrayList<>();
+		List<StudentDTO> students = new ArrayList<>();
+		List<ParentDTO> parents = new ArrayList<>();
+		for (UserEntity user: userList) {
+			if (user.getRole().equals(UserRole.ROLE_ADMIN))
+				admins.add(dtos.adminToDTO(user));
+			if (user.getRole().equals(UserRole.ROLE_TEACHER))
+				teachers.add(dtos.teacherToDTO(teacherRepo.findById(user.getId()).get()));
+			if (user.getRole().equals(UserRole.ROLE_STUDENT))
+				students.add(dtos.studentToDTO(studRepo.findById(user.getId()).get()));
+			if (user.getRole().equals(UserRole.ROLE_PARENT))
+				parents.add(dtos.parentToDTO(parentRepo.findById(user.getId()).get()));
+		}
+		UsersDTO response = new UsersDTO();
+		response.setAdmins(admins);
+		response.setParents(parents);
+		response.setStudents(students);
+		response.setTeachers(teachers);
+		return new ResponseEntity<> (response, HttpStatus.OK);
 	}
 
 }

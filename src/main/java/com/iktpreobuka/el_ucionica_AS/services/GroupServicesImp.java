@@ -1,5 +1,8 @@
 package com.iktpreobuka.el_ucionica_AS.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeGroupDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewGroupDTO;
+import com.iktpreobuka.el_ucionica_AS.controllers.ResponseDTOs.GroupDTO;
 import com.iktpreobuka.el_ucionica_AS.entities.StudentEntity;
 import com.iktpreobuka.el_ucionica_AS.entities.StudgroupEntity;
 import com.iktpreobuka.el_ucionica_AS.repositories.StudentRepository;
@@ -21,13 +25,15 @@ public class GroupServicesImp implements GroupServices{
 	private StudgroupRepository groupRepo;
 	@Autowired
 	private StudentRepository studRepo;
+	@Autowired
+	private DtoServices dtos;
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
 	public ResponseEntity<?> getGroupById(Integer id) {
 		if (groupRepo.existsById(id))
-			return new ResponseEntity<> (groupRepo.findById(id), HttpStatus.OK);
+			return new ResponseEntity<> (dtos.groupToDTO(groupRepo.findById(id).get()), HttpStatus.OK);
 		return new ResponseEntity<> ("Error: Student Group not found", HttpStatus.BAD_REQUEST);
 	}
 
@@ -46,7 +52,7 @@ public class GroupServicesImp implements GroupServices{
 					group.setYear(group.getYear()+1);
 					logger.info("Group " + group.getId() + " has advanced to next year.");
 				}
-				return new ResponseEntity<> (groupRepo.save(group), HttpStatus.OK);
+				return new ResponseEntity<> (dtos.groupToDTO(groupRepo.save(group)), HttpStatus.OK);
 			}
 			logger.info("Attempted to advance an inactive class");
 			return new ResponseEntity<> ("Error: The group is not active", HttpStatus.BAD_REQUEST);
@@ -71,7 +77,7 @@ public class GroupServicesImp implements GroupServices{
 				logger.info("Group " + group.getId() + " has been reactivated. Please add students to the group.");
 				group.setActive(true);
 			}
-			return new ResponseEntity<> (groupRepo.save(group), HttpStatus.OK);
+			return new ResponseEntity<> (dtos.groupToDTO(groupRepo.save(group)), HttpStatus.OK);
 		}
 		logger.info("Attempted to change status of a group that doesn't exist.");
 		return new ResponseEntity<> ("Error: Group not found", HttpStatus.BAD_REQUEST);
@@ -83,7 +89,7 @@ public class GroupServicesImp implements GroupServices{
 			StudgroupEntity group = groupRepo.findById(id).get();
 			groupRepo.deleteById(id);
 			logger.info("Group " + group.getId() + " deleted. Please. reassign the students.");
-			return new ResponseEntity<> (group, HttpStatus.OK);
+			return new ResponseEntity<> (dtos.groupToDTO(group), HttpStatus.OK);
 		}
 		logger.info("Attempted to delete a group that doesn't exist");
 		return new ResponseEntity<> ("Error: Group not found", HttpStatus.BAD_REQUEST);
@@ -98,7 +104,7 @@ public class GroupServicesImp implements GroupServices{
 					StudentEntity student = studRepo.findById(studId).get();
 					student.setStudgroup(group);
 					logger.info("Student " + studId + " added to group " + groupId +".");
-					return new ResponseEntity<> (studRepo.save(student), HttpStatus.OK);
+					return new ResponseEntity<> (dtos.studentToDTO(studRepo.save(student)), HttpStatus.OK);
 				}
 				logger.info("Attempted to add a student to an inactive group.");
 				return new ResponseEntity<> ("Error: Group is not active", HttpStatus.BAD_REQUEST);
@@ -120,7 +126,7 @@ public class GroupServicesImp implements GroupServices{
 			group.setYear(1);
 		group.setStudgroup(newGroup.getStudgroup());
 		logger.info("Created a new group, designation " + group.getYear() + "-" + group.getStudgroup() + " and ID " + group.getId() + ". Please, add students.");
-		return new ResponseEntity<> (groupRepo.save(group), HttpStatus.OK);
+		return new ResponseEntity<> (dtos.groupToDTO(groupRepo.save(group)), HttpStatus.OK);
 		}
 
 	@Override
@@ -135,7 +141,28 @@ public class GroupServicesImp implements GroupServices{
 		if (changeGroup.getYear()!=null)
 			group.setYear(changeGroup.getYear());
 		logger.warn("Group " + group.getId() + " altered. Please, check the information.");
-		return new ResponseEntity<> (groupRepo.save(group), HttpStatus.OK);
+		return new ResponseEntity<> (dtos.groupToDTO(groupRepo.save(group)), HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<?> getAllGroups() {
+		List<StudgroupEntity> groups = (List<StudgroupEntity>) groupRepo.findAll();
+		if (groups.isEmpty())
+			return new ResponseEntity<> ("No groups in database", HttpStatus.NOT_FOUND);
+		List<GroupDTO> response = new ArrayList<>();
+		for (StudgroupEntity sge : groups)
+			response.add(dtos.groupToDTO(sge));
+		return new ResponseEntity<> (response, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> getActiveGroups() {
+		List<StudgroupEntity> groups = groupRepo.findAllByActive(true);
+		if (groups.isEmpty())
+			return new ResponseEntity<> ("No active groups in database", HttpStatus.NOT_FOUND);
+		List<GroupDTO> response = new ArrayList<>();
+		for (StudgroupEntity sge : groups)
+			response.add(dtos.groupToDTO(sge));
+		return new ResponseEntity<> (response, HttpStatus.OK);
+	}
 }

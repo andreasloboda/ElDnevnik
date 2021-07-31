@@ -35,4 +35,6 @@ public interface SubjectServices {
 
 	ResponseEntity<?> getSubsFromStudent(Integer studId);
 
+	ResponseEntity<?> getAllSubs();
+
 }

@@ -23,26 +23,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeSubjectDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewSubjectDTO;
-import com.iktpreobuka.el_ucionica_AS.repositories.SubjectRepository;
-import com.iktpreobuka.el_ucionica_AS.services.OtherServices;
+import com.iktpreobuka.el_ucionica_AS.services.SecurityServices;
 import com.iktpreobuka.el_ucionica_AS.services.SubjectServices;
 
 @RestController
 public class SubjectController {
 
 	@Autowired
-	private SubjectRepository subRepo;
-	@Autowired
 	private SubjectServices subServ;
 	@Autowired
-	private OtherServices otherServ;
+	private SecurityServices otherServ;
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/subjects")
 	public ResponseEntity<?> getAllSubjects() {
-		return new ResponseEntity<> (subRepo.findAll(), HttpStatus.OK);
+		return subServ.getAllSubs();
 	}
 	
 	@Secured("ROLE_ADMIN")

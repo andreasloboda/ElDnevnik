@@ -22,14 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeGroupDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewGroupDTO;
-import com.iktpreobuka.el_ucionica_AS.repositories.StudgroupRepository;
 import com.iktpreobuka.el_ucionica_AS.services.GroupServices;
 
 @RestController
 public class StudgroupController {
 
-	@Autowired
-	private StudgroupRepository groupRepo;
 	@Autowired
 	private GroupServices groupServ;
 	
@@ -38,13 +35,13 @@ public class StudgroupController {
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/groups/")
 	public ResponseEntity<?> getAllGroups() {
-		return new ResponseEntity<> (groupRepo.findAll(), HttpStatus.OK);
+		return groupServ.getAllGroups();
 	}
 	
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/groups/active")
 	public ResponseEntity<?> getActiveGroups() {
-		return new ResponseEntity<> (groupRepo.findAllByActive(true), HttpStatus.OK);
+		return groupServ.getActiveGroups();
 	}
 	
 	@Secured("ROLE_ADMIN")

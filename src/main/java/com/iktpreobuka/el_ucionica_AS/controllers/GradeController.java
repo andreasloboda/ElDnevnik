@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.ChangeGradeDTO;
 import com.iktpreobuka.el_ucionica_AS.controllers.RequestDTOs.NewGradeDTO;
 import com.iktpreobuka.el_ucionica_AS.services.GradeServices;
-import com.iktpreobuka.el_ucionica_AS.services.OtherServices;
+import com.iktpreobuka.el_ucionica_AS.services.SecurityServices;
 
 @RestController
 public class GradeController {
@@ -32,7 +32,7 @@ public class GradeController {
 	@Autowired
 	private GradeServices gradeServ;
 	@Autowired
-	private OtherServices otherServ;
+	private SecurityServices otherServ;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	

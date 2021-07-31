@@ -21,4 +21,8 @@ public interface GroupServices {
 
 	ResponseEntity<?> alterGroup(ChangeGroupDTO changeGroup, Integer id);
 
+	ResponseEntity<?> getAllGroups();
+
+	ResponseEntity<?> getActiveGroups();
+
 }
