@@ -33,4 +33,12 @@ public interface UserServices {
 
 	ResponseEntity<?> getAll();
 
+	ResponseEntity<?> getStudentByName(String name);
+
+	ResponseEntity<?> getTeacherByName(String name);
+
+	ResponseEntity<?> getParentByName(String name);
+
+	ResponseEntity<?> getAllByName(String name);
+
 }

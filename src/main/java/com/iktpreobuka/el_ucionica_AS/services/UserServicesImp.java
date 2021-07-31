@@ -347,4 +347,67 @@ public class UserServicesImp implements UserServices{
 		return new ResponseEntity<> (response, HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<?> getStudentByName(String name) {
+		if (studRepo.existsByName(name)) {
+			List<StudentEntity> list = studRepo.findAllByName(name);
+			List<StudentDTO> students = new ArrayList<>();
+			for (StudentEntity se : list)
+				students.add(dtos.studentToDTO(se));
+			return new ResponseEntity<> (students, HttpStatus.OK);
+		}
+		return new ResponseEntity<> ("Error: Student does not exist", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> getTeacherByName(String name) {
+		if (teacherRepo.existsByName(name)) {
+			List<TeacherEntity> list = teacherRepo.findAllByName(name);
+			List<TeacherDTO> teachers = new ArrayList<>();
+			for (TeacherEntity te : list)
+				teachers.add(dtos.teacherToDTO(te));
+			return new ResponseEntity<> (teachers, HttpStatus.OK);
+		}
+		return new ResponseEntity<> ("Error: Teacher does not exist", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> getParentByName(String name) {
+		if (parentRepo.existsByName(name)) {
+			List<ParentEntity> list = parentRepo.findAllByName(name);
+			List<ParentDTO> parents = new ArrayList<>();
+			for (ParentEntity pe : list)
+				parents.add(dtos.parentToDTO(pe));
+			return new ResponseEntity<> (parents, HttpStatus.OK);
+		}
+		return new ResponseEntity<> ("Error: Parent does not exist", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<?> getAllByName(String name) {
+		UsersDTO response = new UsersDTO(); 
+		if (studRepo.existsByName(name)) {
+			List<StudentEntity> list = studRepo.findAllByName(name);
+			List<StudentDTO> students = new ArrayList<>();
+			for (StudentEntity se : list)
+				students.add(dtos.studentToDTO(se));
+			response.setStudents(students);
+		}
+		if (teacherRepo.existsByName(name)) {
+			List<TeacherEntity> list = teacherRepo.findAllByName(name);
+			List<TeacherDTO> teachers = new ArrayList<>();
+			for (TeacherEntity te : list)
+				teachers.add(dtos.teacherToDTO(te));
+			response.setTeachers(teachers);
+		}
+		if (parentRepo.existsByName(name)) {
+			List<ParentEntity> list = parentRepo.findAllByName(name);
+			List<ParentDTO> parents = new ArrayList<>();
+			for (ParentEntity pe : list)
+				parents.add(dtos.parentToDTO(pe));
+			response.setParents(parents);
+		}
+		return new ResponseEntity<> (response, HttpStatus.OK);
+	}
+
 }

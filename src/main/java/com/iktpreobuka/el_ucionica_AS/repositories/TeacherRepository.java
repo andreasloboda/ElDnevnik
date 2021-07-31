@@ -10,4 +10,8 @@ public interface TeacherRepository extends CrudRepository<TeacherEntity, Integer
 
 	List<TeacherEntity> findAllBySubjectsSubjectId(Integer subId);
 
+	List<TeacherEntity> findAllByName(String name);
+
+	boolean existsByName(String name);
+
 }

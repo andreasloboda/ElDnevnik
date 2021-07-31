@@ -85,6 +85,30 @@ public class UserController {
 	public ResponseEntity<?> getAllByRole(@PathVariable String role) {
 		return userServ.getByRole(role);
 	}
+	
+	@Secured("ROLE_ADMIN")
+	@GetMapping("/users/search/name")
+	public ResponseEntity<?> getAllByName(@RequestParam String name) {
+		return userServ.getAllByName(name);
+	}
+	
+	@Secured("ROLE_ADMIN")
+	@GetMapping("/users/search/students")
+	public ResponseEntity<?> getStudentByName(@RequestParam String name) {
+		return userServ.getStudentByName(name);
+	}
+	
+	@Secured("ROLE_ADMIN")
+	@GetMapping("/users/search/teachers")
+	public ResponseEntity<?> getTeacherByName(@RequestParam String name) {
+		return userServ.getTeacherByName(name);
+	}
+	
+	@Secured("ROLE_ADMIN")
+	@GetMapping("/users/search/parents")
+	public ResponseEntity<?> getParentByName(@RequestParam String name) {
+		return userServ.getParentByName(name);
+	}
 
 	@Secured({"ROLE_ADMIN", "ROLE_STUDENT", "ROLE_PARENT", "ROLE_TEACHER"})
 	@GetMapping("/users/search/id/{id}")
