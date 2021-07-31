@@ -11,6 +11,7 @@ import javax.persistence.Version;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.iktpreobuka.el_ucionica_AS.entities.enums.UserRole;
+import com.sun.istack.NotNull;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -20,9 +21,12 @@ public class UserEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+	@NotNull
 	private String username;
+	@NotNull
 	@JsonIgnore
 	private String password;
+	@NotNull
 	private UserRole role;
 	@Version
 	@JsonIgnore
